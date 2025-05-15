@@ -12,13 +12,10 @@ const MAX_AGE = 60;
 const S_MAX_AGE = 3600;
 
 export async function GET() {
-  const paths = getPaths();
-
-  const headers = {
-    'Cache-Control': `public, max-age=${MAX_AGE}, s-maxage=${S_MAX_AGE}`,
-  };
-
-  return getServerSideSitemap([...paths], headers);
+  return new Response(
+    `<?xml version="1.0" encoding="UTF-8"?><urlset></urlset>`,
+    { headers: { 'Content-Type': 'application/xml' } },
+  );
 }
 
 function getPaths() {
