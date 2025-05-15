@@ -23,21 +23,16 @@ function Home() {
         <Hero
           pill={
             <Pill label={'New'}>
-              <span>The leading SaaS Starter Kit for ambitious developers</span>
+              <span>Your AI Edge in Crypto Trading Starts Here</span>
             </Pill>
           }
           title={
             <>
-              <span>The ultimate SaaS Starter</span>
-              <span>for your next project</span>
+              <span>The Ultimate AI-Powered</span>
+              <span>Crypto Trading Platform</span>
             </>
           }
-          subtitle={
-            <span>
-              Build and Ship a SaaS faster than ever before with the next-gen
-              SaaS Starter Kit. Ship your SaaS in days, not months.
-            </span>
-          }
+          subtitle={<span>Launch the Future of Crypto Trading with AI</span>}
           cta={<MainCallToActionButton />}
           image={
             <Image
@@ -62,12 +57,11 @@ function Home() {
             heading={
               <>
                 <b className="font-semibold dark:text-white">
-                  The ultimate SaaS Starter Kit
+                  The Ultimate AI-Powered Crypto Trading Platform
                 </b>
                 .{' '}
                 <span className="text-muted-foreground font-normal">
-                  Unleash your creativity and build your SaaS faster than ever
-                  with Makerkit.
+                  Launch the Future of Crypto Trading with AI.
                 </span>
               </>
             }
@@ -81,7 +75,7 @@ function Home() {
             <FeatureGrid>
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden'}
-                label={'Beautiful Dashboard'}
+                label={'Instant Dashboard'}
                 description={`Makerkit provides a beautiful dashboard to manage your SaaS business.`}
               />
 
