@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import { ArrowRightIcon, LayoutDashboard } from 'lucide-react';
 
+// import { usePersonalAccountData } from '@kit/accounts/hooks/use-personal-account-data';
 import {
   CtaButton,
   FeatureCard,
@@ -17,22 +18,25 @@ import { Trans } from '@kit/ui/trans';
 import { withI18n } from '~/lib/i18n/with-i18n';
 
 function Home() {
+  // const user = usePersonalAccountData('ec9e869c-72b2-4eab-8df0-237492b17945');
+
+  // console.log('user', user);
   return (
     <div className={'mt-4 flex flex-col space-y-24 py-14'}>
       <div className={'container mx-auto'}>
         <Hero
           pill={
             <Pill label={'New'}>
-              <span>Your AI Edge in Crypto Trading Starts Here</span>
+              <span>Your AI Edge in Trading Starts Here</span>
             </Pill>
           }
           title={
             <>
               <span>The Ultimate AI-Powered</span>
-              <span>Crypto Trading Platform</span>
+              <span>Trading Platform</span>
             </>
           }
-          subtitle={<span>Launch the Future of Crypto Trading with AI</span>}
+          subtitle={<span>Launch the Future of Trading with AI</span>}
           cta={<MainCallToActionButton />}
           image={
             <Image
@@ -57,7 +61,7 @@ function Home() {
             heading={
               <>
                 <b className="font-semibold dark:text-white">
-                  The Ultimate AI-Powered Crypto Trading Platform
+                  The Ultimate AI-Powered Trading Platform
                 </b>
                 .{' '}
                 <span className="text-muted-foreground font-normal">

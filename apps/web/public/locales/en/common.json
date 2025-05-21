@@ -63,6 +63,8 @@
     "dashboard": "Dashboard",
     "settings": "Settings",
     "profile": "Profile",
+    "marketNews": "Market News",
+    "screener": "Screener",
     "application": "Application"
   },
   "roles": {

@@ -97,6 +97,9 @@ create table if not exists
     created_by  uuid references auth.users,
     updated_by  uuid references auth.users,
     picture_url varchar(1000),
+    amount_invested float4 default 0.0 not null,
+    total_profit float4 default 0.0 not null,
+    return_percentage float4 default 0.0 not null,
     public_data jsonb                 default '{}'::jsonb not null,
     primary key (id)
 );
@@ -118,6 +121,12 @@ comment on column public.accounts.created_at is 'The timestamp when the account 
 comment on column public.accounts.created_by is 'The user who created the account';
 
 comment on column public.accounts.updated_by is 'The user who last updated the account';
+
+comment on column public.accounts.amount_invested is 'The total amount invested by the account';
+
+comment on column public.accounts.total_profit is 'The total profit earned by the account';
+
+comment on column public.accounts.return_percentage is 'The return percentage calculated as (profit / invested)';
 
 -- Enable RLS on the accounts table
 alter table "public"."accounts"

@@ -14,6 +14,7 @@ import {
   XAxis,
 } from 'recharts';
 
+import { usePersonalAccountData } from '@kit/accounts/hooks/use-personal-account-data';
 import { Badge } from '@kit/ui/badge';
 import {
   Card,
@@ -29,6 +30,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@kit/ui/chart';
+import { LoadingOverlay } from '@kit/ui/loading-overlay';
 import {
   Table,
   TableBody,
@@ -38,11 +40,18 @@ import {
   TableRow,
 } from '@kit/ui/table';
 
-export default function DashboardDemo() {
-  const mrr = useMemo(() => generateDemoData(), []);
-  const netRevenue = useMemo(() => generateDemoData(), []);
-  const fees = useMemo(() => generateDemoData(), []);
-  const newCustomers = useMemo(() => generateDemoData(), []);
+import ScreenerTableServer from '~/screener/screener-table-server';
+
+type DashboardDemoChartsProps = {
+  userId: string;
+};
+
+export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
+  const user = usePersonalAccountData(userId);
+
+  if (!user.data || user.isPending) {
+    return <LoadingOverlay fullPage />;
+  }
 
   return (
     <div
@@ -58,50 +67,56 @@ export default function DashboardDemo() {
         <Card>
           <CardHeader>
             <CardTitle className={'flex items-center gap-2.5'}>
-              <span>MRR</span>
-              <Trend trend={'up'}>20%</Trend>
+              <span>Amount Invested</span>
+              {/* <Trend trend={'up'}>20%</Trend> */}
             </CardTitle>
 
             <CardDescription>
-              <span>Monthly recurring revenue</span>
+              <span>Total amount has been invested from your side</span>
             </CardDescription>
 
             <div>
-              <Figure>{`$${mrr[1]}`}</Figure>
+              <Figure>
+                {'$'}
+                {user.data.amount_invested}
+              </Figure>
             </div>
           </CardHeader>
-
+          {/* 
           <CardContent className={'space-y-4'}>
             <Chart data={mrr[0]} />
-          </CardContent>
+          </CardContent> */}
         </Card>
 
         <Card>
           <CardHeader>
             <CardTitle className={'flex items-center gap-2.5'}>
               <span>Revenue</span>
-              <Trend trend={'up'}>12%</Trend>
+              {/* <Trend trend={'up'}>12%</Trend> */}
             </CardTitle>
 
             <CardDescription>
-              <span>Total revenue including fees</span>
+              <span>Total revenue</span>
             </CardDescription>
 
             <div>
-              <Figure>{`$${netRevenue[1]}`}</Figure>
+              <Figure>
+                {'$'}
+                {user.data.total_profit}
+              </Figure>
             </div>
           </CardHeader>
 
-          <CardContent>
+          {/* <CardContent>
             <Chart data={netRevenue[0]} />
-          </CardContent>
+          </CardContent> */}
         </Card>
 
         <Card>
           <CardHeader>
             <CardTitle className={'flex items-center gap-2.5'}>
-              <span>Fees</span>
-              <Trend trend={'up'}>9%</Trend>
+              <span>Return Percentage</span>
+              {/* <Trend trend={'up'}>9%</Trend> */}
             </CardTitle>
 
             <CardDescription>
@@ -109,34 +124,16 @@ export default function DashboardDemo() {
             </CardDescription>
 
             <div>
-              <Figure>{`$${fees[1]}`}</Figure>
+              <Figure>
+                {'%'}
+                {user.data.return_percentage}
+              </Figure>
             </div>
           </CardHeader>
 
-          <CardContent>
+          {/* <CardContent>
             <Chart data={fees[0]} />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className={'flex items-center gap-2.5'}>
-              <span>New Customers</span>
-              <Trend trend={'down'}>-25%</Trend>
-            </CardTitle>
-
-            <CardDescription>
-              <span>Customers who signed up this month</span>
-            </CardDescription>
-
-            <div>
-              <Figure>{`${Number(newCustomers[1]).toFixed(0)}`}</Figure>
-            </div>
-          </CardHeader>
-
-          <CardContent>
-            <Chart data={newCustomers[0]} />
-          </CardContent>
+          </CardContent> */}
         </Card>
       </div>
 
@@ -145,7 +142,7 @@ export default function DashboardDemo() {
       <PageViewsChart />
 
       <div>
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Best Customers</CardTitle>
             <CardDescription>Showing the top customers by MRR</CardDescription>
@@ -154,7 +151,9 @@ export default function DashboardDemo() {
           <CardContent>
             <CustomersTable />
           </CardContent>
-        </Card>
+        </Card> */}
+        {/* <DataTable columns={columns} data={screenerDataResults.quotes} /> */}
+        {/* <ScreenerTableServer /> */}
       </div>
     </div>
   );

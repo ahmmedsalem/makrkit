@@ -1,4 +1,4 @@
-import { Home, User } from 'lucide-react';
+import { Home, MonitorUp, TrendingUp, User } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -16,6 +16,26 @@ const routes = [
         path: pathsConfig.app.home,
         Icon: <Home className={iconClasses} />,
         end: true,
+      },
+    ],
+  },
+  {
+    label: 'common:routes.marketNews',
+    children: [
+      {
+        label: 'common:routes.marketNews',
+        path: pathsConfig.app.marketNews,
+        Icon: <TrendingUp className={iconClasses} />,
+      },
+    ],
+  },
+  {
+    label: 'common:routes.screener',
+    children: [
+      {
+        label: 'common:routes.screener',
+        path: pathsConfig.app.screener,
+        Icon: <MonitorUp className={iconClasses} />,
       },
     ],
   },

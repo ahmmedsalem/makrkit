@@ -15,9 +15,7 @@ import { LoadingOverlay } from '@kit/ui/loading-overlay';
 import { Trans } from '@kit/ui/trans';
 
 import { usePersonalAccountData } from '../hooks/use-personal-account-data';
-import { AccountDangerZone } from './account-danger-zone';
 import { UpdateEmailFormContainer } from './email/update-email-form-container';
-import { MultiFactorAuthFactorsList } from './mfa/multi-factor-auth-list';
 import { UpdatePasswordFormContainer } from './password/update-password-container';
 import { UpdateAccountDetailsFormContainer } from './update-account-details-form-container';
 import { UpdateAccountImageContainer } from './update-account-image-container';
@@ -133,7 +131,7 @@ export function PersonalAccountSettingsContainer(
           </CardContent>
         </Card>
       </If>
-
+      {/* 
       <Card>
         <CardHeader>
           <CardTitle>
@@ -148,8 +146,8 @@ export function PersonalAccountSettingsContainer(
         <CardContent>
           <MultiFactorAuthFactorsList userId={props.userId} />
         </CardContent>
-      </Card>
-
+      </Card> */}
+      {/* 
       <If condition={props.features.enableAccountDeletion}>
         <Card className={'border-destructive'}>
           <CardHeader>
@@ -166,7 +164,7 @@ export function PersonalAccountSettingsContainer(
             <AccountDangerZone />
           </CardContent>
         </Card>
-      </If>
+      </If> */}
     </div>
   );
 }

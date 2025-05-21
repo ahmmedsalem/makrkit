@@ -4,42 +4,54 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useSupabase } from '@kit/supabase/hooks/use-supabase';
 
+// Define a type for the account data returned from Supabase
+export interface AccountData {
+  id: string;
+  name: string | null;
+  picture_url: string | null;
+  amount_invested: number | null;
+  total_profit: number | null;
+  return_percentage: number | null;
+}
+
+// Define a partial version for initial hydration (optional)
+export type PartialAccountData = Partial<AccountData> & { id: string };
+
 export function usePersonalAccountData(
   userId: string,
-  partialAccount?: {
-    id: string | null;
-    name: string | null;
-    picture_url: string | null;
-  },
+  partialAccount?: PartialAccountData,
 ) {
   const client = useSupabase();
   const queryKey = ['account:data', userId];
 
-  const queryFn = async () => {
+  const queryFn = async (): Promise<AccountData | null> => {
     if (!userId) {
       return null;
     }
 
-    const response = await client
+    const { data, error } = await client
       .from('accounts')
       .select(
         `
         id,
         name,
-        picture_url
-    `,
+        picture_url,
+        amount_invested,
+        total_profit,
+        return_percentage
+      `,
       )
       .eq('id', userId)
       .single();
 
-    if (response.error) {
-      throw response.error;
+    if (error) {
+      throw error;
     }
 
-    return response.data;
+    return data;
   };
 
-  return useQuery({
+  return useQuery<AccountData | null>({
     queryKey,
     queryFn,
     enabled: !!userId,
@@ -48,8 +60,11 @@ export function usePersonalAccountData(
     initialData: partialAccount?.id
       ? {
           id: partialAccount.id,
-          name: partialAccount.name,
-          picture_url: partialAccount.picture_url,
+          name: partialAccount.name ?? null,
+          picture_url: partialAccount.picture_url ?? null,
+          amount_invested: partialAccount.amount_invested ?? null,
+          total_profit: partialAccount.total_profit ?? null,
+          return_percentage: partialAccount.return_percentage ?? null,
         }
       : undefined,
   });

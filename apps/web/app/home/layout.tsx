@@ -11,6 +11,7 @@ import {
 import { SidebarProvider } from '@kit/ui/shadcn-sidebar';
 
 import { AppLogo } from '~/components/app-logo';
+import Logo from '~/components/icons/Logo';
 import { navigationConfig } from '~/config/navigation.config';
 import { withI18n } from '~/lib/i18n/with-i18n';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
@@ -72,7 +73,7 @@ function HeaderLayout({ children }: React.PropsWithChildren) {
 function MobileNavigation() {
   return (
     <>
-      <AppLogo />
+      <Logo />
 
       <HomeMobileNavigation />
     </>
