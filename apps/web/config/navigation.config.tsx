@@ -1,4 +1,4 @@
-import { Home, MonitorUp, TrendingUp, User } from 'lucide-react';
+import { Home, MonitorUp, TrendingUp, User, Wallet } from 'lucide-react';
 import { z } from 'zod';
 
 import { NavigationConfigSchema } from '@kit/ui/navigation-schema';
@@ -46,6 +46,16 @@ const routes = [
         label: 'common:routes.profile',
         path: pathsConfig.app.profileSettings,
         Icon: <User className={iconClasses} />,
+      },
+    ],
+  },
+  {
+    label: 'Wallet',
+    children: [
+      {
+        label: 'Wallet',
+        path: pathsConfig.app.wallet,
+        Icon: <Wallet className={iconClasses} />,
       },
     ],
   },
