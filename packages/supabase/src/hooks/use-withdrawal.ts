@@ -7,6 +7,13 @@ type WithdrawalParams = {
   paymentMethod: 'paypal' | 'stripe' | 'bank' | 'crypto';
   paypalEmail?: string;
   paypalConfirm?: string;
+  stripeEmail?: string;
+  bankAccountNumber?: string;
+  iban?: string;
+  bankName?: string;
+  bankAccountHolderName?: string;
+  cryptoWalletAddress?: string;
+  cryptoCoinType?: 'bitcoin' | 'ethereum' | 'usdt' | 'usdc';
 };
 
 /**
@@ -43,17 +50,54 @@ export function useCreateWithdrawal() {
     console.log('🚀 Creating withdrawal with data:', params);
     console.log('👤 User ID:', user.id);
 
-    // Validate PayPal emails
+    // Validate fields based on payment method
     if (params.paymentMethod === 'paypal') {
       if (!params.paypalEmail || !params.paypalConfirm || params.paypalEmail !== params.paypalConfirm) {
         throw new Error('PayPal emails must match');
       }
     }
+    if (params.paymentMethod === 'stripe') {
+      if (!params.stripeEmail) {
+        throw new Error('Stripe email is required');
+      }
+    }
+    if (params.paymentMethod === 'bank') {
+      if (!params.bankAccountNumber || !params.iban || !params.bankName || !params.bankAccountHolderName) {
+        throw new Error('Bank account details are required');
+      }
+    }
+    if (params.paymentMethod === 'crypto') {
+      if (!params.cryptoWalletAddress || !params.cryptoCoinType) {
+        throw new Error('Crypto wallet address and coin type are required');
+      }
+    }
 
     // Prepare payment details
-    const paymentDetails: Record<string, any> = params.paymentMethod === 'paypal'
-      ? { email: params.paypalEmail }
-      : { method: params.paymentMethod };
+    let paymentDetails: Record<string, any>;
+    switch (params.paymentMethod) {
+      case 'paypal':
+        paymentDetails = { email: params.paypalEmail };
+        break;
+      case 'stripe':
+        paymentDetails = { email: params.stripeEmail };
+        break;
+      case 'bank':
+        paymentDetails = {
+          account_number: params.bankAccountNumber,
+          iban: params.iban,
+          bank_name: params.bankName,
+          account_holder_name: params.bankAccountHolderName,
+        };
+        break;
+      case 'crypto':
+        paymentDetails = {
+          wallet_address: params.cryptoWalletAddress,
+          coin_type: params.cryptoCoinType,
+        };
+        break;
+      default:
+        paymentDetails = { method: params.paymentMethod };
+    }
 
     // Calculate processing fee and net amount
     const processingFee = calculateProcessingFee(params.amount, params.paymentMethod);

@@ -15,7 +15,7 @@ import { useSupabase } from "@kit/supabase/hooks/use-supabase";
 import { useCreateWithdrawal } from "@kit/supabase/hooks/use-withdrawal";
 import { usePersonalAccountData } from "@kit/accounts/hooks/use-personal-account-data";
 
-// Schema for form validation (focused on PayPal)
+// Schema for form validation
 const WithdrawalSchema = z
     .object({
         amount: z.number().min(10, "Minimum withdrawal amount is $10"),
@@ -24,72 +24,120 @@ const WithdrawalSchema = z
         }),
         paypalEmail: z.string().email("Invalid email address").optional(),
         paypalConfirm: z.string().email("Invalid email address").optional(),
+        stripeEmail: z.string().email("Invalid email address").optional(),
+        bankAccountNumber: z.string().min(8, "Account number must be at least 8 characters").optional(),
+        iban: z.string().min(15, "IBAN must be at least 15 characters").optional(),
+        bankName: z.string().min(1, "Bank name is required").optional(),
+        bankAccountHolderName: z.string().min(1, "Account holder name is required").optional(),
+        cryptoWalletAddress: z.string().min(20, "Wallet address must be at least 20 characters").optional(),
+        cryptoCoinType: z.enum(["bitcoin", "ethereum", "usdt", "usdc"], {
+            required_error: "Please select a coin type",
+        }).optional(),
     })
     .refine(
         (data) => {
             if (data.paymentMethod === "paypal") {
                 return data.paypalEmail && data.paypalConfirm && data.paypalEmail === data.paypalConfirm;
             }
+            if (data.paymentMethod === "stripe") {
+                return data.stripeEmail;
+            }
+            if (data.paymentMethod === "bank") {
+                return data.bankAccountNumber && data.iban && data.bankName && data.bankAccountHolderName;
+            }
+            if (data.paymentMethod === "crypto") {
+                return data.cryptoWalletAddress && data.cryptoCoinType;
+            }
             return true;
         },
         {
-            message: "PayPal emails must match",
-            path: ["paypalConfirm"],
+            message: "Required fields are missing or invalid for the selected payment method",
+            path: ["paymentMethod"],
         }
     );
 
 type WithdrawalFormData = z.infer<typeof WithdrawalSchema>;
 
 export default function WithdrawPage() {
-    const { data: user, isPending } = useUser();
-    const ProfileData = usePersonalAccountData(user?.id!);
-
+    const { data: user, isPending: isUserPending, error: userError } = useUser();
+    const client = useSupabase();
     const createWithdrawal = useCreateWithdrawal();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const ProfileData = usePersonalAccountData(user?.id!);
 
     const form = useForm<WithdrawalFormData>({
         resolver: zodResolver(WithdrawalSchema),
         defaultValues: {
             amount: undefined,
             paymentMethod: undefined,
-            paypalEmail: "",
-            paypalConfirm: "",
+            paypalEmail: undefined,
+            paypalConfirm: undefined,
+            stripeEmail: undefined,
+            bankAccountNumber: undefined,
+            iban: undefined,
+            bankName: undefined,
+            bankAccountHolderName: undefined,
+            cryptoWalletAddress: undefined,
+            cryptoCoinType: undefined,
         },
     });
 
     const watchedPaymentMethod = form.watch("paymentMethod");
 
-    if (isPending) {
+
+
+    if (isUserPending) {
+        console.log("⏳ User data is pending");
         return <LoadingOverlay fullPage={false} />;
     }
 
     if (!user) {
+        console.log("❌ No user found");
         toast.error("Please log in to access this page");
         return null;
     }
 
+    if (userError) {
+        console.error("❌ User error:", userError);
+        toast.error("Error loading user data");
+        return null;
+    }
 
     const onSubmit = async (data: WithdrawalFormData) => {
-        console.log("🚀 Form submitted with data:", data);
+        console.log("🚀 Form submit triggered with data:", data);
         setIsSubmitting(true);
         toast.info("Submitting withdrawal request...");
 
         try {
+            // Validate form data
+            const validatedData = WithdrawalSchema.parse(data);
+            console.log("✅ Validated form data:", validatedData);
+
+            // Call mutation
+            console.log("🔄 Calling createWithdrawal.mutateAsync...");
             const withdrawal = await createWithdrawal.mutateAsync(data);
+            console.log("✅ Withdrawal created:", withdrawal);
+
             toast.success(`Withdrawal request submitted successfully! ID: ${withdrawal.request_id}`);
             form.reset();
         } catch (error) {
-            if (error instanceof Error) {
+            console.error("💥 Submission error:", error);
+            if (error instanceof z.ZodError) {
+                console.log("❌ Zod validation errors:", error.flatten());
+                toast.error("Form validation failed. Please check your inputs and console for details.");
+            } else if (error instanceof Error) {
                 toast.error(`Error: ${error.message}`);
             } else {
                 toast.error("An unexpected error occurred. Please try again.");
             }
         } finally {
+            console.log("🏁 Submission complete, resetting isSubmitting");
             setIsSubmitting(false);
         }
     };
 
     const renderPaymentFields = () => {
+        console.log("🎨 Rendering payment fields for:", watchedPaymentMethod);
         if (watchedPaymentMethod === "paypal") {
             return (
                 <div className="flex flex-col space-y-4">
@@ -110,7 +158,7 @@ export default function WithdrawPage() {
                             <FormItem>
                                 <FormLabel>PayPal Email Address</FormLabel>
                                 <FormControl>
-                                    <Input type="email" placeholder="your-email@example.com" data-test="paypal-email" {...field} />
+                                    <Input type="email" placeholder="your-email@example.com" data-test="paypal-email" {...field} value={field.value ?? ""} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -122,7 +170,154 @@ export default function WithdrawPage() {
                             <FormItem>
                                 <FormLabel>Confirm PayPal Email</FormLabel>
                                 <FormControl>
-                                    <Input type="email" placeholder="Confirm your PayPal email" data-test="paypal-confirm" {...field} />
+                                    <Input type="email" placeholder="Confirm your PayPal email" data-test="paypal-confirm" {...field} value={field.value ?? ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+            );
+        }
+        if (watchedPaymentMethod === "stripe") {
+            return (
+                <div className="flex flex-col space-y-4">
+                    <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                            />
+                        </svg>
+                        <h3 className="font-semibold">Stripe Details</h3>
+                    </div>
+                    <FormField
+                        name="stripeEmail"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Stripe Email Address</FormLabel>
+                                <FormControl>
+                                    <Input type="email" placeholder="your-email@example.com" data-test="stripe-email" {...field} value={field.value ?? ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+            );
+        }
+        if (watchedPaymentMethod === "bank") {
+            return (
+                <div className="flex flex-col space-y-4">
+                    <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
+                        </svg>
+                        <h3 className="font-semibold">Bank Transfer Details</h3>
+                    </div>
+                    <FormField
+                        name="bankAccountNumber"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Account Number</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Enter your bank account number" data-test="bank-account-number" {...field} value={field.value ?? ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="iban"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>IBAN</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Enter your IBAN (e.g., DE89370400440532013000)" data-test="bank-iban" {...field} value={field.value ?? ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="bankName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Bank Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Enter your bank name" data-test="bank-name" {...field} value={field.value ?? ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="bankAccountHolderName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Account Holder Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Enter the account holder's name" data-test="bank-account-holder-name" {...field} value={field.value ?? ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+            );
+        }
+        if (watchedPaymentMethod === "crypto") {
+            return (
+                <div className="flex flex-col space-y-4">
+                    <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400">
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 10V3L4 14h7v7l9-11h-7z"
+                            />
+                        </svg>
+                        <h3 className="font-semibold">Cryptocurrency Details</h3>
+                    </div>
+                    <FormField
+                        name="cryptoWalletAddress"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Wallet Address</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Enter your cryptocurrency wallet address" data-test="crypto-wallet-address" {...field} value={field.value ?? ""} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="cryptoCoinType"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Coin Type</FormLabel>
+                                <FormControl>
+                                    <select
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        data-test="crypto-coin-type"
+                                        {...field}
+                                        value={field.value ?? ""}
+                                        onChange={(e) => field.onChange(e.target.value || undefined)}
+                                    >
+                                        <option value="">Select coin type</option>
+                                        <option value="bitcoin">Bitcoin (BTC)</option>
+                                        <option value="ethereum">Ethereum (ETH)</option>
+                                        <option value="usdt">Tether (USDT)</option>
+                                        <option value="usdc">USD Coin (USDC)</option>
+                                    </select>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -148,7 +343,11 @@ export default function WithdrawPage() {
                     <div className="flex items-center justify-between">
                         <div>
                             <h2 className="text-lg font-medium opacity-90">Available Balance</h2>
-                            <p className="text-3xl font-bold mt-1">${(ProfileData?.data?.amount_invested && ProfileData?.data?.total_profit) ? ProfileData?.data?.amount_invested! + ProfileData?.data?.total_profit! : 0}</p>
+                            <p className="text-3xl font-bold mt-1">
+                                ${ProfileData?.data?.amount_invested && ProfileData?.data?.total_profit
+                                    ? (ProfileData.data.amount_invested + ProfileData.data.total_profit).toFixed(2)
+                                    : "0.00"}
+                            </p>
                             <p className="text-sm opacity-75 mt-1">Last updated: Today at 2:30 PM</p>
                         </div>
                         <div className="text-right">
@@ -172,7 +371,7 @@ export default function WithdrawPage() {
                         <div className="mb-6">
                             <h2 className="text-xl font-semibold">Request Withdrawal</h2>
                             <p className="text-muted-foreground mt-1">
-                                Enter the amount to withdraw and your PayPal email (if selected).
+                                Enter the amount to withdraw and payment details for your selected method.
                             </p>
                         </div>
 
@@ -180,7 +379,10 @@ export default function WithdrawPage() {
                             <form
                                 data-test="withdrawal-form"
                                 className="flex flex-col space-y-4"
-                                onSubmit={form.handleSubmit(onSubmit)}
+                                onSubmit={(e) => {
+                                    console.log("📤 Form submission event triggered");
+                                    form.handleSubmit(onSubmit)(e);
+                                }}
                             >
                                 <FormField
                                     name="amount"
@@ -217,7 +419,10 @@ export default function WithdrawPage() {
                                                 </div>
                                             </FormControl>
                                             <p className="text-sm text-muted-foreground">
-                                                Available balance: $2,450.00 • Minimum withdrawal: $10.00
+                                                Available balance: $
+                                                {ProfileData?.data?.amount_invested && ProfileData?.data?.total_profit
+                                                    ? (ProfileData.data.amount_invested + ProfileData.data.total_profit).toFixed(2)
+                                                    : "0.00"} • Minimum withdrawal: $10.00
                                             </p>
                                             <FormMessage />
                                         </FormItem>
@@ -234,6 +439,8 @@ export default function WithdrawPage() {
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                                     data-test="payment-method"
                                                     {...field}
+                                                    value={field.value ?? ""}
+                                                    onChange={(e) => field.onChange(e.target.value || undefined)}
                                                 >
                                                     <option value="">Select payment method</option>
                                                     <option value="paypal">PayPal</option>
@@ -259,7 +466,7 @@ export default function WithdrawPage() {
                                                 </p>
                                             )}
                                             {watchedPaymentMethod === "stripe" && (
-                                                <p>Stripe transfers usually complete within 2-7 business days depending on your bank.</p>
+                                                <p>Stripe transfers usually complete within 2-7 business days depending on your bank. A 2.9% processing fee applies.</p>
                                             )}
                                             {watchedPaymentMethod === "bank" && (
                                                 <p>
