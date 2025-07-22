@@ -42,7 +42,18 @@ file_size_limit = "50MiB"
 # in emails.
 site_url = "http://localhost:3000"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["http://localhost:3000", "http://localhost:3000/auth/callback", "http://localhost:3000/update-password"]
+# Note: For production, add these URLs to your Supabase dashboard:
+# - https://dragos-capital.net
+# - https://dragos-capital.net/auth/callback
+# - https://dragos-capital.net/update-password
+additional_redirect_urls = [
+  "http://localhost:3000", 
+  "http://localhost:3000/auth/callback", 
+  "http://localhost:3000/update-password",
+  "https://dragos-capital.net",
+  "https://dragos-capital.net/auth/callback",
+  "https://dragos-capital.net/update-password"
+]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 seconds (one
 # week).
 jwt_expiry = 3600
@@ -72,7 +83,7 @@ redirect_uri = ""
 url = ""
 
 [auth.email.template.invite]
-subject = "You are invited to Makerkit"
+subject = "You are invited to Dragos Capital"
 content_path = "./supabase/templates/invite-user.html"
 
 [auth.email.template.confirmation]
@@ -88,7 +99,7 @@ subject = "Confirm your email change"
 content_path = "./supabase/templates/change-email-address.html"
 
 [auth.email.template.magic_link]
-subject = "Sign in to Makerkit"
+subject = "Sign in to Dragos Capital"
 content_path = "./supabase/templates/magic-link.html"
 
 [analytics]

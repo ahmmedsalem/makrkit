@@ -21,8 +21,9 @@ import { AuthProviderButton } from './auth-provider-button';
  *
  * @see https://supabase.com/docs/guides/auth/social-login
  */
-const OAUTH_SCOPES: Partial<Record<Provider, string>> = {
-  azure: 'email',
+const OAUTH_SCOPES: Partial<Record<Provider, { scopes?: string }>> = {
+  azure: { scopes: 'email' },
+  google: { scopes: 'email profile' },
   // add your OAuth providers here
 };
 
