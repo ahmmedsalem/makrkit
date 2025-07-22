@@ -65,7 +65,7 @@ function Home() {
                 </b>
                 .{' '}
                 <span className="text-muted-foreground font-normal">
-                  Launch the Future of Crypto Trading with AI.
+                  Launch the Future of Trading with AI.
                 </span>
               </>
             }
@@ -80,7 +80,7 @@ function Home() {
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden'}
                 label={'Instant Dashboard'}
-                description={`Makerkit provides a beautiful dashboard to manage your SaaS business.`}
+                description={`Dragos Capital provides a beautiful dashboard to manage your trading business.`}
               />
 
               <FeatureCard
@@ -88,7 +88,7 @@ function Home() {
                   'relative col-span-2 w-full overflow-hidden lg:col-span-1'
                 }
                 label={'Authentication'}
-                description={`Makerkit provides a variety of providers to allow your users to sign in.`}
+                description={`Dragos Capital provides a variety of providers to allow your users to sign in.`}
               />
 
               <FeatureCard
@@ -100,7 +100,7 @@ function Home() {
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden'}
                 label={'Billing'}
-                description={`Makerkit supports multiple payment gateways to charge your customers.`}
+                description={`Dragos Capital supports multiple payment gateways to serve your customers.`}
               />
             </FeatureGrid>
           </FeatureShowcase>

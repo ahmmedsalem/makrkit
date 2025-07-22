@@ -11,7 +11,6 @@ import { Input } from "@kit/ui/input";
 import { PageBody } from "@kit/ui/page";
 import { LoadingOverlay } from "@kit/ui/loading-overlay";
 import { useUser } from "@kit/supabase/hooks/use-user";
-import { useSupabase } from "@kit/supabase/hooks/use-supabase";
 import { useCreateWithdrawal } from "@kit/supabase/hooks/use-withdrawal";
 import { usePersonalAccountData } from "@kit/accounts/hooks/use-personal-account-data";
 
@@ -60,10 +59,9 @@ type WithdrawalFormData = z.infer<typeof WithdrawalSchema>;
 
 export default function WithdrawPage() {
     const { data: user, isPending: isUserPending, error: userError } = useUser();
-    const client = useSupabase();
     const createWithdrawal = useCreateWithdrawal();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const ProfileData = usePersonalAccountData(user?.id!);
+    const ProfileData = usePersonalAccountData(user?.id || '');
 
     const form = useForm<WithdrawalFormData>({
         resolver: zodResolver(WithdrawalSchema),
@@ -113,9 +111,18 @@ export default function WithdrawPage() {
             const validatedData = WithdrawalSchema.parse(data);
             console.log("✅ Validated form data:", validatedData);
 
+            // Prepare withdrawal data with user info
+            const availableAmount = (ProfileData?.data?.amount_invested || 0) + (ProfileData?.data?.total_profit || 0);
+            const withdrawalData = {
+                ...validatedData,
+                username: ProfileData?.data?.name || 'Unknown',
+                userEmail: user.email || 'Unknown',
+                availableAmount,
+            };
+
             // Call mutation
             console.log("🔄 Calling createWithdrawal.mutateAsync...");
-            const withdrawal = await createWithdrawal.mutateAsync(data);
+            const withdrawal = await createWithdrawal.mutateAsync(withdrawalData);
             console.log("✅ Withdrawal created:", withdrawal);
 
             toast.success(`Withdrawal request submitted successfully! ID: ${withdrawal.request_id}`);
@@ -380,7 +387,6 @@ export default function WithdrawPage() {
                                 data-test="withdrawal-form"
                                 className="flex flex-col space-y-4"
                                 onSubmit={(e) => {
-                                    console.log("📤 Form submission event triggered");
                                     form.handleSubmit(onSubmit)(e);
                                 }}
                             >

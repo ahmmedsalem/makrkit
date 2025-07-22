@@ -81,6 +81,9 @@ export type Database = {
           processing_fee: number;
           net_amount: number;
           status: string;
+          username: string;
+          user_email: string;
+          available_amount: number;
           created_at: string;
         };
         Insert: {
@@ -93,6 +96,9 @@ export type Database = {
           processing_fee: number;
           net_amount: number;
           status?: string;
+          username: string;
+          user_email: string;
+          available_amount: number;
           created_at?: string;
         };
         Update: {
@@ -105,6 +111,9 @@ export type Database = {
           processing_fee?: number;
           net_amount?: number;
           status?: string;
+          username?: string;
+          user_email?: string;
+          available_amount?: number;
           created_at?: string;
         };
         Relationships: [

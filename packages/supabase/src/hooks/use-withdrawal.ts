@@ -14,6 +14,9 @@ type WithdrawalParams = {
   bankAccountHolderName?: string;
   cryptoWalletAddress?: string;
   cryptoCoinType?: 'bitcoin' | 'ethereum' | 'usdt' | 'usdc';
+  username?: string;
+  userEmail?: string;
+  availableAmount?: number;
 };
 
 /**
@@ -73,26 +76,26 @@ export function useCreateWithdrawal() {
     }
 
     // Prepare payment details
-    let paymentDetails: Record<string, any>;
+    let paymentDetails: Record<string, string>;
     switch (params.paymentMethod) {
       case 'paypal':
-        paymentDetails = { email: params.paypalEmail };
+        paymentDetails = { email: params.paypalEmail || '' };
         break;
       case 'stripe':
-        paymentDetails = { email: params.stripeEmail };
+        paymentDetails = { email: params.stripeEmail || '' };
         break;
       case 'bank':
         paymentDetails = {
-          account_number: params.bankAccountNumber,
-          iban: params.iban,
-          bank_name: params.bankName,
-          account_holder_name: params.bankAccountHolderName,
+          account_number: params.bankAccountNumber || '',
+          iban: params.iban || '',
+          bank_name: params.bankName || '',
+          account_holder_name: params.bankAccountHolderName || '',
         };
         break;
       case 'crypto':
         paymentDetails = {
-          wallet_address: params.cryptoWalletAddress,
-          coin_type: params.cryptoCoinType,
+          wallet_address: params.cryptoWalletAddress || '',
+          coin_type: params.cryptoCoinType || '',
         };
         break;
       default:
@@ -118,6 +121,9 @@ export function useCreateWithdrawal() {
       processing_fee: processingFee,
       net_amount: netAmount,
       status: 'pending',
+      username: params.username || 'Unknown',
+      user_email: params.userEmail || user.email || 'Unknown',
+      available_amount: params.availableAmount || 0,
       created_at: new Date().toISOString(),
     };
 
