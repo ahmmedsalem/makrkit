@@ -8,7 +8,8 @@
     "NEXT_PUBLIC_PRODUCT_NAME",
     "NEXT_PUBLIC_SITE_URL",
     "LOGGER",
-    "CAPTCHA_SECRET_TOKEN"
+    "CAPTCHA_SECRET_TOKEN",
+    "FMP_API_KEY"
   ],
   "tasks": {
     "topo": {
