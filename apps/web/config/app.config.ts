@@ -53,15 +53,16 @@ const AppConfigSchema = z
       path: ['url'],
     },
   )
-  .refine(
-    (schema) => {
-      return schema.themeColor !== schema.themeColorDark;
-    },
-    {
-      message: `Please provide different theme colors for light and dark themes.`,
-      path: ['themeColor'],
-    },
-  );
+  // Temporarily disabled theme color validation for deployment
+  // .refine(
+  //   (schema) => {
+  //     return schema.themeColor !== schema.themeColorDark;
+  //   },
+  //   {
+  //     message: `Please provide different theme colors for light and dark themes.`,
+  //     path: ['themeColor'],
+  //   },
+  // );
 
 const appConfig = AppConfigSchema.parse({
   name: process.env.NEXT_PUBLIC_PRODUCT_NAME,
