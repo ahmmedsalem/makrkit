@@ -10,6 +10,12 @@ import pathsConfig from '~/config/paths.config';
 import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
 import { withI18n } from '~/lib/i18n/with-i18n';
 
+interface SignInPageProps {
+  searchParams: {
+    next?: string;
+  };
+}
+
 export const generateMetadata = async () => {
   const i18n = await createI18nServerInstance();
 
@@ -23,14 +29,26 @@ const paths = {
   home: pathsConfig.app.home,
 };
 
-function SignInPage() {
+function SignInPage({ searchParams }: SignInPageProps) {
+  // Determine where to redirect after successful sign-in
+  // If 'next' parameter is a marketing page, redirect there; otherwise go to home
+  const nextPath = searchParams.next;
+  const returnPath = nextPath === '/' || nextPath?.startsWith('/faq') || nextPath?.startsWith('/contact') 
+    ? '/' 
+    : pathsConfig.app.home;
+
+  const dynamicPaths = {
+    ...paths,
+    home: returnPath,
+  };
+
   return (
     <>
       <Heading level={5} className={'tracking-tight'}>
         <Trans i18nKey={'auth:signInHeading'} />
       </Heading>
 
-      <SignInMethodsContainer paths={paths} providers={authConfig.providers} />
+      <SignInMethodsContainer paths={dynamicPaths} providers={authConfig.providers} />
 
       <div className={'flex justify-center'}>
         <Button asChild variant={'link'} size={'sm'}>

@@ -4,6 +4,7 @@ import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Slot } from '@radix-ui/react-slot';
 
 import { cn } from '../lib/utils';
+import { DirectionalChevronRight } from '../makerkit/directional-arrow';
 
 const Breadcrumb: React.FC<
   React.ComponentPropsWithoutRef<'nav'> & {
@@ -81,7 +82,7 @@ const BreadcrumbSeparator = ({
     className={cn('[&>svg]:size-3.5', className)}
     {...props}
   >
-    {children ?? <ChevronRightIcon />}
+    {children ?? <DirectionalChevronRight />}
   </li>
 );
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';

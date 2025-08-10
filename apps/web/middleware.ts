@@ -154,6 +154,28 @@ function getPatterns() {
         }
       },
     },
+    {
+      pattern: new URLPattern({ pathname: '/' }),
+      handler: async (req: NextRequest, res: NextResponse) => {
+        // Marketing pages (root, faq, contact) should be accessible to all users
+        // No authentication required
+        return;
+      },
+    },
+    {
+      pattern: new URLPattern({ pathname: '/faq' }),
+      handler: async (req: NextRequest, res: NextResponse) => {
+        // Marketing pages should be accessible to all users
+        return;
+      },
+    },
+    {
+      pattern: new URLPattern({ pathname: '/contact' }),
+      handler: async (req: NextRequest, res: NextResponse) => {
+        // Marketing pages should be accessible to all users
+        return;
+      },
+    },
   ];
 }
 

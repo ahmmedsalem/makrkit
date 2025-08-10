@@ -21,6 +21,12 @@ const ModeToggle = dynamic(() =>
   })),
 );
 
+const LanguageToggle = dynamic(() =>
+  import('@kit/ui/language-toggle').then((mod) => ({
+    default: mod.LanguageToggle,
+  })),
+);
+
 const paths = {
   home: pathsConfig.app.home,
 };
@@ -65,6 +71,8 @@ function AuthButtons() {
   return (
     <div className={'flex space-x-2'}>
       <div className={'hidden space-x-0.5 md:flex'}>
+        <LanguageToggle />
+        
         <If condition={features.enableThemeToggle}>
           <ModeToggle />
         </If>

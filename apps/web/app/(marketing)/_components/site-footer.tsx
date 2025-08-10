@@ -20,7 +20,7 @@ export function SiteFooter() {
       }
       sections={[
         {
-          heading: 'Get Started',
+          heading: <Trans i18nKey="marketing:getStartedSection" />,
           links: [
             {
               href: '/auth/sign-in',

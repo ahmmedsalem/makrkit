@@ -30,15 +30,22 @@ export function useAuthChangeListener({
   privatePathPrefixes = PRIVATE_PATH_PREFIXES,
   appHomePath,
   onEvent,
+  skipOnMarketingPages = false,
 }: {
   appHomePath: string;
   privatePathPrefixes?: string[];
   onEvent?: (event: AuthChangeEvent, user: Session | null) => void;
+  skipOnMarketingPages?: boolean;
 }) {
   const client = useSupabase();
   const pathName = usePathname();
 
   useEffect(() => {
+    // Skip setting up auth listener on marketing pages to prevent interference
+    if (skipOnMarketingPages) {
+      return;
+    }
+
     // keep this running for the whole session unless the component was unmounted
     const listener = client.auth.onAuthStateChange((event, user) => {
       if (onEvent) {
@@ -71,7 +78,7 @@ export function useAuthChangeListener({
 
     // destroy listener on un-mounts
     return () => listener.data.subscription.unsubscribe();
-  }, [client.auth, pathName, appHomePath, privatePathPrefixes, onEvent]);
+  }, [client.auth, pathName, appHomePath, privatePathPrefixes, onEvent, skipOnMarketingPages]);
 }
 
 /**

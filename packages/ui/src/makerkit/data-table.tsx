@@ -19,12 +19,7 @@ import type {
   SortingState,
   VisibilityState,
 } from '@tanstack/react-table';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
+// Import directional arrows for RTL support
 
 import { Button } from '../shadcn/button';
 import {
@@ -36,6 +31,12 @@ import {
   TableHeader,
   TableRow,
 } from '../shadcn/table';
+import { 
+  DirectionalChevronLeft, 
+  DirectionalChevronRight, 
+  DirectionalDoubleChevronLeft, 
+  DirectionalDoubleChevronRight 
+} from './directional-arrow';
 import { Trans } from './trans';
 
 interface ReactTableProps<T extends object> {
@@ -226,7 +227,7 @@ function Pagination<T>({
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
-          <ChevronsLeft className={'h-4'} />
+          <DirectionalDoubleChevronLeft className={'h-4'} />
         </Button>
 
         <Button
@@ -235,7 +236,7 @@ function Pagination<T>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          <ChevronLeft className={'h-4'} />
+          <DirectionalChevronLeft className={'h-4'} />
         </Button>
 
         <Button
@@ -244,7 +245,7 @@ function Pagination<T>({
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          <ChevronRight className={'h-4'} />
+          <DirectionalChevronRight className={'h-4'} />
         </Button>
 
         <Button
@@ -253,7 +254,7 @@ function Pagination<T>({
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
-          <ChevronsRight className={'h-4'} />
+          <DirectionalDoubleChevronRight className={'h-4'} />
         </Button>
       </div>
     </div>

@@ -39,6 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from '@kit/ui/table';
+import { Trans } from '@kit/ui/trans';
 
 import ScreenerTableServer from '~/screener/screener-table-server';
 
@@ -67,12 +68,12 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
         <Card>
           <CardHeader>
             <CardTitle className={'flex items-center gap-2.5'}>
-              <span>Amount Invested</span>
+              <Trans i18nKey={'common:amountInvested'} />
               {/* <Trend trend={'up'}>20%</Trend> */}
             </CardTitle>
 
             <CardDescription>
-              <span>Total amount has been invested from your side</span>
+              <Trans i18nKey={'common:amountInvestedDescription'} />
             </CardDescription>
 
             <div>
@@ -91,12 +92,12 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
         <Card>
           <CardHeader>
             <CardTitle className={'flex items-center gap-2.5'}>
-              <span>Revenue</span>
+              <Trans i18nKey={'common:revenue'} />
               {/* <Trend trend={'up'}>12%</Trend> */}
             </CardTitle>
 
             <CardDescription>
-              <span>Total revenue</span>
+              <Trans i18nKey={'common:revenueDescription'} />
             </CardDescription>
 
             <div>
@@ -115,12 +116,12 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
         <Card>
           <CardHeader>
             <CardTitle className={'flex items-center gap-2.5'}>
-              <span>Return Percentage</span>
+              <Trans i18nKey={'common:returnPercentage'} />
               {/* <Trend trend={'up'}>9%</Trend> */}
             </CardTitle>
 
             <CardDescription>
-              <span>Total fees collected</span>
+              <Trans i18nKey={'common:returnPercentageDescription'} />
             </CardDescription>
 
             <div>
@@ -614,9 +615,11 @@ export function VisitorsChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Visitors</CardTitle>
+        <CardTitle>
+          <Trans i18nKey={'common:visitors'} />
+        </CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          <Trans i18nKey={'common:visitorsDescription'} />
         </CardDescription>
       </CardHeader>
 
@@ -685,10 +688,10 @@ export function VisitorsChart() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 leading-none font-medium">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              <Trans i18nKey={'common:trendingUp'} /> <TrendingUp className="h-4 w-4" />
             </div>
             <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              January - June 2024
+              <Trans i18nKey={'common:visitorsDateRange'} />
             </div>
           </div>
         </div>
@@ -821,10 +824,12 @@ export function PageViewsChart() {
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Page Views</CardTitle>
+          <CardTitle>
+            <Trans i18nKey={'common:pageViews'} />
+          </CardTitle>
 
           <CardDescription>
-            Showing total visitors for the last 3 months
+            <Trans i18nKey={'common:pageViewsDescription'} />
           </CardDescription>
         </div>
 

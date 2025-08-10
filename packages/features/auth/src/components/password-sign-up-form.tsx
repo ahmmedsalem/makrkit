@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight } from 'lucide-react';
+import { DirectionalArrowRight } from '@kit/ui/directional-arrow';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -150,7 +150,7 @@ export function PasswordSignUpForm({
               <>
                 <Trans i18nKey={'auth:signUpWithEmail'} />
 
-                <ArrowRight
+                <DirectionalArrowRight
                   className={
                     'zoom-in animate-in slide-in-from-left-2 fill-mode-both h-4 delay-500 duration-500'
                   }

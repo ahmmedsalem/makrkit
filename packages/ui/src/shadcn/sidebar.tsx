@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 
 import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
-import { ChevronDown, PanelLeft } from 'lucide-react';
+import { ChevronDown, PanelLeft, PanelRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { useIsMobile } from '../hooks/use-mobile';
@@ -297,12 +297,15 @@ const SidebarTrigger: React.FC<React.ComponentProps<typeof Button>> = ({
   ...props
 }) => {
   const context = React.useContext(SidebarContext);
+  const { i18n } = useTranslation();
 
   if (!context) {
     return null;
   }
 
   const { toggleSidebar } = context;
+  const isRTL = i18n.language === 'ar';
+  const PanelIcon = isRTL ? PanelRight : PanelLeft;
 
   return (
     <Button
@@ -316,7 +319,7 @@ const SidebarTrigger: React.FC<React.ComponentProps<typeof Button>> = ({
       }}
       {...props}
     >
-      <PanelLeft />
+      <PanelIcon />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

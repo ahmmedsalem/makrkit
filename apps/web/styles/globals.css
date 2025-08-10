@@ -7,6 +7,12 @@
 /* Tailwind CSS */
 @import 'tailwindcss';
 
+/* Font definitions for Tailwind CSS v4 */
+@theme {
+  --font-family-sans: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-family-arabic: var(--font-arabic), var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
 /* local styles - update the below if you add a new style */
 @import './theme.css';
 @import './theme.utilities.css';
@@ -45,5 +51,38 @@
   input::placeholder,
   textarea::placeholder {
     color: theme(--color-muted-foreground);
+  }
+
+  /* Font family configurations for language switching */
+  .font-sans {
+    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+
+  .font-arabic {
+    font-family: var(--font-arabic), var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+
+  /* Heading font configurations */
+  .font-arabic h1, 
+  .font-arabic h2, 
+  .font-arabic h3, 
+  .font-arabic h4, 
+  .font-arabic h5, 
+  .font-arabic h6,
+  .font-arabic .heading {
+    font-family: var(--font-arabic), var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+
+  /* Ensure proper rendering for Arabic text */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  /* Optimize Arabic font rendering */
+  .font-arabic {
+    font-feature-settings: "kern" 1, "liga" 1, "clig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }

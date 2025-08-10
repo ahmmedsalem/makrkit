@@ -1,7 +1,9 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { ArrowRightIcon, LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard } from 'lucide-react';
 
 // import { usePersonalAccountData } from '@kit/accounts/hooks/use-personal-account-data';
 import {
@@ -14,10 +16,12 @@ import {
   Pill,
 } from '@kit/ui/marketing';
 import { Trans } from '@kit/ui/trans';
+import { DirectionalArrowRight } from '@kit/ui/directional-arrow';
 
-import { withI18n } from '~/lib/i18n/with-i18n';
+import { useTranslation } from 'react-i18next';
 
 function Home() {
+  const { t } = useTranslation(['marketing']);
   // const user = usePersonalAccountData('ec9e869c-72b2-4eab-8df0-237492b17945');
 
   // console.log('user', user);
@@ -26,17 +30,27 @@ function Home() {
       <div className={'container mx-auto'}>
         <Hero
           pill={
-            <Pill label={'New'}>
-              <span>Your AI Edge in Trading Starts Here</span>
+            <Pill label={t('heroTagNew')}>
+              <span>
+                <Trans i18nKey="marketing:heroTagline" />
+              </span>
             </Pill>
           }
           title={
             <>
-              <span>The Ultimate AI-Powered</span>
-              <span>Trading Platform</span>
+              <span>
+                <Trans i18nKey="marketing:heroTitle1" />
+              </span>
+              <span>
+                <Trans i18nKey="marketing:heroTitle2" />
+              </span>
             </>
           }
-          subtitle={<span>Launch the Future of Trading with AI</span>}
+          subtitle={
+            <span>
+              <Trans i18nKey="marketing:heroSubtitle" />
+            </span>
+          }
           cta={<MainCallToActionButton />}
           image={
             <Image
@@ -61,46 +75,48 @@ function Home() {
             heading={
               <>
                 <b className="font-semibold dark:text-white">
-                  The Ultimate AI-Powered Trading Platform
+                  <Trans i18nKey="marketing:featureShowcaseHeading" />
                 </b>
                 .{' '}
                 <span className="text-muted-foreground font-normal">
-                  Launch the Future of Trading with AI.
+                  <Trans i18nKey="marketing:featureShowcaseSubheading" />
                 </span>
               </>
             }
             icon={
               <FeatureShowcaseIconContainer>
                 <LayoutDashboard className="h-5" />
-                <span>All-in-one solution</span>
+                <span>
+                  <Trans i18nKey="marketing:allInOneSolution" />
+                </span>
               </FeatureShowcaseIconContainer>
             }
           >
             <FeatureGrid>
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden'}
-                label={'Instant Dashboard'}
-                description={`Dragos Capital provides a beautiful dashboard to manage your trading business.`}
+                label={t('instantDashboard')}
+                description={t('instantDashboardDescription')}
               />
 
               <FeatureCard
                 className={
                   'relative col-span-2 w-full overflow-hidden lg:col-span-1'
                 }
-                label={'Authentication'}
-                description={`Dragos Capital provides a variety of providers to allow your users to sign in.`}
+                label={t('authentication')}
+                description={t('authenticationDescription')}
               />
 
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden lg:col-span-1'}
-                label={'Multi Tenancy'}
-                description={`Multi tenant memberships for your SaaS business.`}
+                label={t('multiTenancy')}
+                description={t('multiTenancyDescription')}
               />
 
               <FeatureCard
                 className={'relative col-span-2 overflow-hidden'}
-                label={'Billing'}
-                description={`Dragos Capital supports multiple payment gateways to serve your customers.`}
+                label={t('billing')}
+                description={t('billingDescription')}
               />
             </FeatureGrid>
           </FeatureShowcase>
@@ -110,7 +126,7 @@ function Home() {
   );
 }
 
-export default withI18n(Home);
+export default Home;
 
 function MainCallToActionButton() {
   return (
@@ -122,7 +138,7 @@ function MainCallToActionButton() {
               <Trans i18nKey={'common:getStarted'} />
             </span>
 
-            <ArrowRightIcon
+            <DirectionalArrowRight
               className={
                 'animate-in fade-in slide-in-from-left-8 h-4' +
                 ' zoom-in fill-mode-both delay-1000 duration-1000'

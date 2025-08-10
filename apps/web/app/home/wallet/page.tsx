@@ -10,6 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@kit/ui/input";
 import { PageBody } from "@kit/ui/page";
 import { LoadingOverlay } from "@kit/ui/loading-overlay";
+import { Trans } from "@kit/ui/trans";
+import { useTranslation } from "react-i18next";
 import { useUser } from "@kit/supabase/hooks/use-user";
 import { useCreateWithdrawal } from "@kit/supabase/hooks/use-withdrawal";
 import { usePersonalAccountData } from "@kit/accounts/hooks/use-personal-account-data";
@@ -58,7 +60,16 @@ const WithdrawalSchema = z
 type WithdrawalFormData = z.infer<typeof WithdrawalSchema>;
 
 export default function WithdrawPage() {
+    const { t } = useTranslation('common');
     const { data: user, isPending: isUserPending, error: userError } = useUser();
+    
+    // Calculate last updated time (current time minus 1 hour 43 minutes)
+    const getLastUpdatedTime = () => {
+        const now = new Date();
+        now.setHours(now.getHours() - 1);
+        now.setMinutes(now.getMinutes() - 43);
+        return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
     const createWithdrawal = useCreateWithdrawal();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const ProfileData = usePersonalAccountData(user?.id || '');
@@ -157,13 +168,17 @@ export default function WithdrawPage() {
                                 d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                             />
                         </svg>
-                        <h3 className="font-semibold">PayPal Details</h3>
+                        <h3 className="font-semibold">
+                            <Trans i18nKey={'common:wallet.paypalDetails'} />
+                        </h3>
                     </div>
                     <FormField
                         name="paypalEmail"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>PayPal Email Address</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.paypalEmail'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input type="email" placeholder="your-email@example.com" data-test="paypal-email" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -175,7 +190,9 @@ export default function WithdrawPage() {
                         name="paypalConfirm"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Confirm PayPal Email</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.confirmPaypalEmail'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input type="email" placeholder="Confirm your PayPal email" data-test="paypal-confirm" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -198,13 +215,17 @@ export default function WithdrawPage() {
                                 d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                             />
                         </svg>
-                        <h3 className="font-semibold">Stripe Details</h3>
+                        <h3 className="font-semibold">
+                            <Trans i18nKey={'common:wallet.stripeDetails'} />
+                        </h3>
                     </div>
                     <FormField
                         name="stripeEmail"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Stripe Email Address</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.stripeEmail'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input type="email" placeholder="your-email@example.com" data-test="stripe-email" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -227,13 +248,17 @@ export default function WithdrawPage() {
                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                             />
                         </svg>
-                        <h3 className="font-semibold">Bank Transfer Details</h3>
+                        <h3 className="font-semibold">
+                            <Trans i18nKey={'common:wallet.bankTransferDetails'} />
+                        </h3>
                     </div>
                     <FormField
                         name="bankAccountNumber"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Account Number</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.accountNumber'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input placeholder="Enter your bank account number" data-test="bank-account-number" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -245,7 +270,9 @@ export default function WithdrawPage() {
                         name="iban"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>IBAN</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.iban'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input placeholder="Enter your IBAN (e.g., DE89370400440532013000)" data-test="bank-iban" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -257,7 +284,9 @@ export default function WithdrawPage() {
                         name="bankName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Bank Name</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.bankName'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input placeholder="Enter your bank name" data-test="bank-name" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -269,7 +298,9 @@ export default function WithdrawPage() {
                         name="bankAccountHolderName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Account Holder Name</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.accountHolderName'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input placeholder="Enter the account holder's name" data-test="bank-account-holder-name" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -292,13 +323,17 @@ export default function WithdrawPage() {
                                 d="M13 10V3L4 14h7v7l9-11h-7z"
                             />
                         </svg>
-                        <h3 className="font-semibold">Cryptocurrency Details</h3>
+                        <h3 className="font-semibold">
+                            <Trans i18nKey={'common:wallet.cryptoDetails'} />
+                        </h3>
                     </div>
                     <FormField
                         name="cryptoWalletAddress"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Wallet Address</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.walletAddress'} />
+                                </FormLabel>
                                 <FormControl>
                                     <Input placeholder="Enter your cryptocurrency wallet address" data-test="crypto-wallet-address" {...field} value={field.value ?? ""} />
                                 </FormControl>
@@ -310,7 +345,9 @@ export default function WithdrawPage() {
                         name="cryptoCoinType"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Coin Type</FormLabel>
+                                <FormLabel>
+                                    <Trans i18nKey={'common:wallet.cryptoType'} />
+                                </FormLabel>
                                 <FormControl>
                                     <select
                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -319,11 +356,11 @@ export default function WithdrawPage() {
                                         value={field.value ?? ""}
                                         onChange={(e) => field.onChange(e.target.value || undefined)}
                                     >
-                                        <option value="">Select coin type</option>
-                                        <option value="bitcoin">Bitcoin (BTC)</option>
-                                        <option value="ethereum">Ethereum (ETH)</option>
-                                        <option value="usdt">Tether (USDT)</option>
-                                        <option value="usdc">USD Coin (USDC)</option>
+                                        <option value="">{t('wallet.selectCoinType')}</option>
+                                        <option value="bitcoin">{t('wallet.bitcoin')}</option>
+                                        <option value="ethereum">{t('wallet.ethereum')}</option>
+                                        <option value="usdt">{t('wallet.tether')}</option>
+                                        <option value="usdc">{t('wallet.usdCoin')}</option>
                                     </select>
                                 </FormControl>
                                 <FormMessage />
@@ -341,21 +378,32 @@ export default function WithdrawPage() {
             <div className="flex flex-col space-y-8">
                 {/* Page Header */}
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold">Wallet Management</h1>
-                    <p className="text-muted-foreground mt-2">Manage your account balance and withdraw funds</p>
+                    <h1 className="text-3xl font-bold">
+                        <Trans i18nKey={'common:wallet.title'} />
+                    </h1>
+                    <p className="text-muted-foreground mt-2">
+                        <Trans i18nKey={'common:wallet.description'} />
+                    </p>
                 </div>
 
                 {/* Balance Display Section */}
                 <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 text-white">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-lg font-medium opacity-90">Available Balance</h2>
+                            <h2 className="text-lg font-medium opacity-90">
+                                <Trans i18nKey={'common:wallet.availableBalance'} />
+                            </h2>
                             <p className="text-3xl font-bold mt-1">
                                 ${ProfileData?.data?.amount_invested && ProfileData?.data?.total_profit
                                     ? (ProfileData.data.amount_invested + ProfileData.data.total_profit).toFixed(2)
                                     : "0.00"}
                             </p>
-                            <p className="text-sm opacity-75 mt-1">Last updated: Today at 2:30 PM</p>
+                            <p className="text-sm opacity-75 mt-1">
+                                <Trans 
+                                    i18nKey={'common:wallet.lastUpdated'} 
+                                    values={{ time: getLastUpdatedTime() }}
+                                />
+                            </p>
                         </div>
                         <div className="text-right">
                             <div className="bg-white/20 rounded-lg p-3">
@@ -376,9 +424,11 @@ export default function WithdrawPage() {
                 <div className="lg:max-w-2xl">
                     <div className="bg-card border rounded-lg p-6">
                         <div className="mb-6">
-                            <h2 className="text-xl font-semibold">Request Withdrawal</h2>
+                            <h2 className="text-xl font-semibold">
+                                <Trans i18nKey={'common:wallet.requestWithdrawal'} />
+                            </h2>
                             <p className="text-muted-foreground mt-1">
-                                Enter the amount to withdraw and payment details for your selected method.
+                                <Trans i18nKey={'common:wallet.withdrawalInstructions'} />
                             </p>
                         </div>
 
@@ -394,7 +444,9 @@ export default function WithdrawPage() {
                                     name="amount"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Withdrawal Amount</FormLabel>
+                                            <FormLabel>
+                                                <Trans i18nKey={'common:wallet.withdrawalAmount'} />
+                                            </FormLabel>
                                             <FormControl>
                                                 <div className="relative">
                                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -425,10 +477,14 @@ export default function WithdrawPage() {
                                                 </div>
                                             </FormControl>
                                             <p className="text-sm text-muted-foreground">
-                                                Available balance: $
-                                                {ProfileData?.data?.amount_invested && ProfileData?.data?.total_profit
-                                                    ? (ProfileData.data.amount_invested + ProfileData.data.total_profit).toFixed(2)
-                                                    : "0.00"} • Minimum withdrawal: $10.00
+                                                <Trans 
+                                                    i18nKey={'common:wallet.availableBalanceInfo'}
+                                                    values={{
+                                                        balance: ProfileData?.data?.amount_invested && ProfileData?.data?.total_profit
+                                                            ? (ProfileData.data.amount_invested + ProfileData.data.total_profit).toFixed(2)
+                                                            : "0.00"
+                                                    }}
+                                                />
                                             </p>
                                             <FormMessage />
                                         </FormItem>
@@ -439,7 +495,9 @@ export default function WithdrawPage() {
                                     name="paymentMethod"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Payment Method</FormLabel>
+                                            <FormLabel>
+                                                <Trans i18nKey={'common:wallet.paymentMethod'} />
+                                            </FormLabel>
                                             <FormControl>
                                                 <select
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -448,11 +506,11 @@ export default function WithdrawPage() {
                                                     value={field.value ?? ""}
                                                     onChange={(e) => field.onChange(e.target.value || undefined)}
                                                 >
-                                                    <option value="">Select payment method</option>
+                                                    <option value="">{t('wallet.selectPaymentMethod')}</option>
                                                     <option value="paypal">PayPal</option>
                                                     <option value="stripe">Stripe</option>
-                                                    <option value="bank">Bank Transfer</option>
-                                                    <option value="crypto">Cryptocurrency</option>
+                                                    <option value="bank">{t('wallet.bankTransfer')}</option>
+                                                    <option value="crypto">{t('wallet.cryptocurrency')}</option>
                                                 </select>
                                             </FormControl>
                                             <FormMessage />
@@ -464,24 +522,28 @@ export default function WithdrawPage() {
 
                                 {watchedPaymentMethod && (
                                     <div className="bg-muted/50 border rounded-lg p-4">
-                                        <h4 className="font-semibold mb-2">Processing Information</h4>
+                                        <h4 className="font-semibold mb-2">
+                                            <Trans i18nKey={'common:wallet.processingInfo'} />
+                                        </h4>
                                         <div className="text-sm text-muted-foreground">
                                             {watchedPaymentMethod === "paypal" && (
                                                 <p>
-                                                    PayPal withdrawals typically process within 1-2 business days. A 2.9% processing fee applies.
+                                                    <Trans i18nKey={'common:wallet.paypalProcessing'} />
                                                 </p>
                                             )}
                                             {watchedPaymentMethod === "stripe" && (
-                                                <p>Stripe transfers usually complete within 2-7 business days depending on your bank. A 2.9% processing fee applies.</p>
+                                                <p>
+                                                    <Trans i18nKey={'common:wallet.stripeProcessing'} />
+                                                </p>
                                             )}
                                             {watchedPaymentMethod === "bank" && (
                                                 <p>
-                                                    Bank transfers can take 3-5 business days to complete. A $5 flat fee applies.
+                                                    <Trans i18nKey={'common:wallet.bankProcessing'} />
                                                 </p>
                                             )}
                                             {watchedPaymentMethod === "crypto" && (
                                                 <p>
-                                                    Cryptocurrency withdrawals typically process within 1-6 hours. A 0.5% fee applies.
+                                                    <Trans i18nKey={'common:wallet.cryptoProcessing'} />
                                                 </p>
                                             )}
                                         </div>
@@ -494,7 +556,11 @@ export default function WithdrawPage() {
                                         data-test="submit-withdrawal"
                                         type="submit"
                                     >
-                                        {isSubmitting || createWithdrawal.isPending ? "Processing..." : "Submit Withdrawal Request"}
+                                        {isSubmitting || createWithdrawal.isPending ? (
+                                            <Trans i18nKey={'common:wallet.processing'} />
+                                        ) : (
+                                            <Trans i18nKey={'common:wallet.submitWithdrawal'} />
+                                        )}
                                     </Button>
                                 </div>
                             </form>

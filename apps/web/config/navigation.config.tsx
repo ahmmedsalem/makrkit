@@ -50,10 +50,10 @@ const routes = [
     ],
   },
   {
-    label: 'Wallet',
+    label: 'common:routes.wallet',
     children: [
       {
-        label: 'Wallet',
+        label: 'common:routes.wallet',
         path: pathsConfig.app.wallet,
         Icon: <Wallet className={iconClasses} />,
       },

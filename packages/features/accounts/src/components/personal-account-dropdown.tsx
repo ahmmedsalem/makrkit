@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@kit/ui/dropdown-menu';
 import { If } from '@kit/ui/if';
+import { SubMenuLanguageToggle } from '@kit/ui/language-toggle';
 import { SubMenuModeToggle } from '@kit/ui/mode-toggle';
 import { ProfileAvatar } from '@kit/ui/profile-avatar';
 import { Trans } from '@kit/ui/trans';
@@ -147,6 +148,8 @@ export function PersonalAccountDropdown({
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
+
+        <SubMenuLanguageToggle />
 
         <If condition={features.enableThemeToggle}>
           <SubMenuModeToggle />

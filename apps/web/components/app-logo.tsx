@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { cn } from '@kit/ui/utils';
 
+import appConfig from '~/config/app.config';
 import Logo from './icons/Logo';
 
 function LogoImage({
@@ -11,7 +12,7 @@ function LogoImage({
   className?: string;
   width?: number;
 }) {
-  return <p>Dragos Capital</p>;
+  return <p>{appConfig.name}</p>;
 }
 
 export function AppLogo({
@@ -33,11 +34,11 @@ export function AppLogo({
 
   return (
     <Link aria-label={label ?? 'Home Page'} href={href ?? '/'}>
-      <div className="flex">
+      <div className="flex items-center gap-2.5">
         <Logo />
         {!collapsed && (
-          <p className="ml-2.5 text-2xl font-semibold dark:text-white">
-            {'Dragos Capital'}
+          <p className="text-2xl font-semibold dark:text-white">
+            {appConfig.name}
           </p>
         )}
       </div>

@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeftIcon } from 'lucide-react';
+import { DirectionalArrowLeft } from '@kit/ui/directional-arrow';
 import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -295,7 +295,7 @@ function FactorQrCode({
 
         <div>
           <Button variant={'outline'} onClick={onCancel}>
-            <ArrowLeftIcon className={'h-4'} />
+            <DirectionalArrowLeft className={'h-4'} />
             <Trans i18nKey={`common:retry`} />
           </Button>
         </div>

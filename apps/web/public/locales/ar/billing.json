@@ -1,0 +1,118 @@
+{
+  "subscriptionTabSubheading": "إدارة اشتراكك والفواتير",
+  "planCardTitle": "خطتك",
+  "planCardDescription": "أدناه تفاصيل خطتك الحالية. يمكنك تغيير خطتك أو إلغاء اشتراكك في أي وقت.",
+  "planRenewal": "يتم التجديد كل {{interval}} بقيمة {{price}}",
+  "planDetails": "تفاصيل الخطة",
+  "checkout": "المتابعة إلى الدفع",
+  "trialEndsOn": "تنتهي فترة التجربة في",
+  "billingPortalCardButton": "زيارة بوابة الفواتير",
+  "billingPortalCardTitle": "إدارة تفاصيل الفواتير",
+  "billingPortalCardDescription": "قم بزيارة بوابة الفواتير لإدارة اشتراكك والفواتير. يمكنك تحديث أو إلغاء خطتك، أو تحميل فواتيرك.",
+  "cancelAtPeriodEndDescription": "مجدول إلغاء اشتراكك في {{- endDate }}.",
+  "renewAtPeriodEndDescription": "مجدول تجديد اشتراكك في {{- endDate }}",
+  "noPermissionsAlertHeading": "ليس لديك صلاحيات لتغيير إعدادات الفواتير",
+  "noPermissionsAlertBody": "يرجى الاتصال بمالك الحساب لتغيير إعدادات الفواتير لحسابك.",
+  "checkoutSuccessTitle": "تم! أنت جاهز الآن.",
+  "checkoutSuccessDescription": "شكراً لك على الاشتراك، لقد قمنا بمعالجة اشتراكك بنجاح! سيتم إرسال بريد تأكيد إلى {{ customerEmail }}.",
+  "checkoutSuccessBackButton": "المتابعة إلى التطبيق",
+  "cannotManageBillingAlertTitle": "لا يمكنك إدارة الفواتير",
+  "cannotManageBillingAlertDescription": "ليس لديك صلاحيات لإدارة الفواتير. يرجى الاتصال بمالك الحساب.",
+  "manageTeamPlan": "إدارة خطة فريقك",
+  "manageTeamPlanDescription": "اختر خطة تناسب احتياجات فريقك. يمكنك الترقية أو التخفيض في خطتك في أي وقت.",
+  "basePlan": "الخطة الأساسية",
+  "billingInterval": {
+    "label": "اختر فترة الفواتير",
+    "month": "يتم الدفع شهرياً",
+    "year": "يتم الدفع سنوياً"
+  },
+  "perMonth": "شهرياً",
+  "custom": "خطة مخصصة",
+  "lifetime": "مدى الحياة",
+  "trialPeriod": "فترة تجربة {{period}} يوم",
+  "perPeriod": "لكل {{period}}",
+  "redirectingToPayment": "جاري التوجيه إلى الدفع. يرجى الانتظار...",
+  "proceedToPayment": "المتابعة إلى الدفع",
+  "startTrial": "بدء التجربة",
+  "perTeamMember": "لكل عضو في الفريق",
+  "perUnit": "لكل استخدام {{unit}}",
+  "teamMembers": "أعضاء الفريق",
+  "includedUpTo": "حتى {{upTo}} {{unit}} مشمولة في الخطة",
+  "fromPreviousTierUpTo": "لكل {{unit}} للعدد التالي {{ upTo }} {{ unit }}",
+  "andAbove": "فوق {{ previousTier }} {{ unit }}",
+  "forEveryUnit": "لكل {{ unit }}",
+  "setupFee": "بالإضافة إلى رسوم إعداد {{ setupFee }}",
+  "perUnitIncluded": "({{included}} مشمولة)",
+  "featuresLabel": "الميزات",
+  "detailsLabel": "التفاصيل",
+  "planPickerLabel": "اختر خطتك المفضلة",
+  "planCardLabel": "إدارة خطتك",
+  "planPickerAlertErrorTitle": "خطأ في طلب الدفع",
+  "planPickerAlertErrorDescription": "حدث خطأ في طلب الدفع. يرجى المحاولة مرة أخرى لاحقاً.",
+  "subscriptionCancelled": "تم إلغاء الاشتراك",
+  "cancelSubscriptionDate": "سيتم إلغاء اشتراكك في نهاية الفترة",
+  "noPlanChosen": "يرجى اختيار خطة",
+  "noIntervalPlanChosen": "يرجى اختيار فترة فواتير",
+  "status": {
+    "free": {
+      "badge": "خطة مجانية",
+      "heading": "أنت حالياً على الخطة المجانية",
+      "description": "أنت على خطة مجانية. يمكنك الترقية إلى خطة مدفوعة في أي وقت."
+    },
+    "active": {
+      "badge": "نشط",
+      "heading": "اشتراكك نشط",
+      "description": "اشتراكك نشط. يمكنك إدارة اشتراكك والفواتير في بوابة العملاء."
+    },
+    "trialing": {
+      "badge": "تجربة",
+      "heading": "أنت في فترة تجربة",
+      "description": "يمكنك الاستمتاع بمزايا الخطة حتى انتهاء فترة التجربة"
+    },
+    "past_due": {
+      "badge": "متأخر",
+      "heading": "فاتورتك متأخرة",
+      "description": "فاتورتك متأخرة. يرجى تحديث طريقة الدفع."
+    },
+    "canceled": {
+      "badge": "ملغي",
+      "heading": "تم إلغاء اشتراكك",
+      "description": "تم إلغاء اشتراكك. مجدول إنهاؤه في نهاية فترة الفواتير."
+    },
+    "unpaid": {
+      "badge": "غير مدفوع",
+      "heading": "فاتورتك غير مدفوعة",
+      "description": "فاتورتك غير مدفوعة. يرجى تحديث طريقة الدفع."
+    },
+    "incomplete": {
+      "badge": "غير مكتمل",
+      "heading": "نحن في انتظار دفعك",
+      "description": "نحن في انتظار معالجة دفعك. يرجى التحلي بالصبر."
+    },
+    "incomplete_expired": {
+      "badge": "منتهي الصلاحية",
+      "heading": "انتهت صلاحية دفعك",
+      "description": "انتهت صلاحية دفعك. يرجى تحديث طريقة الدفع."
+    },
+    "paused": {
+      "badge": "متوقف",
+      "heading": "اشتراكك متوقف",
+      "description": "اشتراكك متوقف. يمكنك استئنافه في أي وقت."
+    },
+    "succeeded": {
+      "badge": "نجح",
+      "heading": "تم دفعك بنجاح",
+      "description": "تم دفعك بنجاح. شكراً لك على الاشتراك!"
+    },
+    "pending": {
+      "badge": "معلق",
+      "heading": "دفعك معلق",
+      "description": "دفعك معلق. يرجى التحلي بالصبر."
+    },
+    "failed": {
+      "badge": "فشل",
+      "heading": "فشل دفعك",
+      "description": "فشل دفعك. يرجى تحديث طريقة الدفع."
+    }
+  }
+}

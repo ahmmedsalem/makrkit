@@ -35,13 +35,13 @@ function PageWithSidebar(props: PageProps) {
   const { Navigation, Children, MobileNavigation } = getSlotsFromPage(props);
 
   return (
-    <div className={cn('flex min-w-0 flex-1', props.className)}>
+    <div className={cn('flex min-w-0 flex-1 rtl:flex-row-reverse', props.className)}>
       {Navigation}
 
       <div
         className={
           props.contentContainerClassName ??
-          'mx-auto flex h-screen w-full flex-col overflow-y-auto bg-inherit'
+          'mx-auto flex h-screen w-full flex-col overflow-y-auto bg-inherit min-w-0'
         }
       >
         {MobileNavigation}
@@ -168,7 +168,7 @@ export function PageHeader({
       )}
     >
       <div className={'flex flex-col gap-y-2'}>
-        <div className="flex items-center gap-x-2.5">
+        <div className="flex items-center gap-x-2.5 rtl:gap-x-reverse">
           {displaySidebarTrigger ? (
             <SidebarTrigger className="text-muted-foreground hover:text-secondary-foreground hidden h-4.5 w-4.5 cursor-pointer lg:inline-flex" />
           ) : null}

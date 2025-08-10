@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons';
-import { ArrowRightIcon } from 'lucide-react';
+import { DirectionalArrowRight } from '@kit/ui/directional-arrow';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
@@ -132,7 +132,7 @@ function SuccessState(props: { redirectTo: string }) {
             <Trans i18nKey={'common:backToHomePage'} />
           </span>
 
-          <ArrowRightIcon className={'ml-2 h-4'} />
+          <DirectionalArrowRight className={'ml-2 h-4'} />
         </Button>
       </Link>
     </div>

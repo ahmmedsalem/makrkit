@@ -21,6 +21,7 @@ export function HomeSidebar(props: {
   user: User;
 }) {
   const { state } = useSidebar();
+
   return (
     <Sidebar collapsible={'icon'}>
       <SidebarHeader className={'h-16 justify-center'}>
