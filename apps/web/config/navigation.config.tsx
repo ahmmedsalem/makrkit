@@ -40,22 +40,22 @@ const routes = [
     ],
   },
   {
-    label: 'common:routes.settings',
-    children: [
-      {
-        label: 'common:routes.profile',
-        path: pathsConfig.app.profileSettings,
-        Icon: <User className={iconClasses} />,
-      },
-    ],
-  },
-  {
     label: 'common:routes.wallet',
     children: [
       {
         label: 'common:routes.wallet',
         path: pathsConfig.app.wallet,
         Icon: <Wallet className={iconClasses} />,
+      },
+    ],
+  },
+  {
+    label: 'common:routes.settings',
+    children: [
+      {
+        label: 'common:routes.profile',
+        path: pathsConfig.app.profileSettings,
+        Icon: <User className={iconClasses} />,
       },
     ],
   },

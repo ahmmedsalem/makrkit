@@ -1,27 +1,14 @@
 'use client';
 
-import { useMemo } from 'react';
-
-import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { cn } from '../lib/utils';
-import { Button } from '../shadcn/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
 } from '../shadcn/dropdown-menu';
-
-const LANGUAGES = [
-  { code: 'en', name: 'English' },
-  { code: 'ar', name: 'العربية' },
-];
 
 interface LanguageToggleProps {
   className?: string;
@@ -42,49 +29,21 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
     window.location.reload();
   };
 
-  const Items = useMemo(() => {
-    return LANGUAGES.map((language) => {
-      const isSelected = currentLanguage === language.code;
+  const isArabic = currentLanguage === 'ar';
 
-      return (
-        <DropdownMenuItem
-          className={cn('flex items-center', {
-            'bg-muted': isSelected,
-          })}
-          key={language.code}
-          onClick={() => handleLanguageChange(language.code)}
-        >
-          <div className="flex items-center gap-2">
-            <Globe className="h-4 w-4" />
-            <span>{language.name}</span>
-          </div>
-        </DropdownMenuItem>
-      );
-    });
-  }, [currentLanguage]);
-
-  // Get the current language letter/symbol
-  const getCurrentLanguageSymbol = () => {
-    if (currentLanguage === 'ar') {
-      return 'العربية'; // Arabic
-    }
-    return 'EN'; // English
+  const handleToggle = () => {
+    const newLanguage = isArabic ? 'en' : 'ar';
+    handleLanguageChange(newLanguage);
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className={cn("h-9 px-2", className)}>
-          <div className="flex items-center gap-1">
-            <Globe className="h-4 w-4" />
-            <span className="text-sm font-medium">{getCurrentLanguageSymbol()}</span>
-          </div>
-          <span className="sr-only">Switch language</span>
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align="end">{Items}</DropdownMenuContent>
-    </DropdownMenu>
+    <button
+      onClick={handleToggle}
+      className={cn("px-3 py-2 rounded-md hover:bg-muted transition-colors text-sm font-medium", className)}
+      aria-label={`Switch to ${isArabic ? 'English' : 'Arabic'}`}
+    >
+      {isArabic ? 'EN' : 'العربية'}
+    </button>
   );
 }
 
@@ -103,35 +62,19 @@ export function SubMenuLanguageToggle() {
     window.location.reload();
   };
 
-  const MenuItems = useMemo(
-    () =>
-      LANGUAGES.map((language) => {
-        const isSelected = currentLanguage === language.code;
+  const isArabic = currentLanguage === 'ar';
 
-        return (
-          <DropdownMenuItem
-            className={cn('flex cursor-pointer items-center', {
-              'bg-muted': isSelected,
-            })}
-            key={language.code}
-            onClick={() => handleLanguageChange(language.code)}
-          >
-            <div className="flex items-center gap-2">
-              <Globe className="h-4 w-4" />
-              <span>{language.name}</span>
-            </div>
-          </DropdownMenuItem>
-        );
-      }),
-    [currentLanguage],
-  );
+  const handleToggle = () => {
+    const newLanguage = isArabic ? 'en' : 'ar';
+    handleLanguageChange(newLanguage);
+  };
 
-  // Get the current language symbol for submenu
-  const getCurrentLanguageSymbol = () => {
+  // Get the next language symbol for submenu trigger
+  const getNextLanguageSymbol = () => {
     if (currentLanguage === 'ar') {
-      return 'العربية'; // Arabic
+      return 'EN'; // Show EN when Arabic is current
     }
-    return 'EN'; // English
+    return 'العربية'; // Show Arabic when English is current
   };
 
   return (
@@ -143,20 +86,35 @@ export function SubMenuLanguageToggle() {
           }
         >
           <div className="flex items-center gap-2">
-            <Globe className="h-4 w-4" />
-            <span className="font-medium">{getCurrentLanguageSymbol()}</span>
+            <span className="font-medium">{getNextLanguageSymbol()}</span>
           </div>
         </DropdownMenuSubTrigger>
 
-        <DropdownMenuSubContent>{MenuItems}</DropdownMenuSubContent>
+        <DropdownMenuSubContent>
+          <button
+            onClick={handleToggle}
+            className="p-2 hover:bg-muted rounded-md transition-colors w-full text-sm font-medium"
+            aria-label={`Switch to ${isArabic ? 'English' : 'Arabic'}`}
+          >
+            {isArabic ? 'EN' : 'العربية'}
+          </button>
+        </DropdownMenuSubContent>
       </DropdownMenuSub>
 
       <div className={'lg:hidden'}>
-        <DropdownMenuLabel className="flex items-center gap-2">
-          <Globe className="h-4 w-4" />
-          <span>{getCurrentLanguageSymbol()}</span>
+        <DropdownMenuLabel>
+          <span>Language</span>
         </DropdownMenuLabel>
-        {MenuItems}
+        
+        <div className="px-2 py-1">
+          <button
+            onClick={handleToggle}
+            className="hover:bg-muted rounded-md transition-colors w-full p-1 text-sm font-medium"
+            aria-label={`Switch to ${isArabic ? 'English' : 'Arabic'}`}
+          >
+            {isArabic ? 'EN' : 'العربية'}
+          </button>
+        </div>
       </div>
     </>
   );

@@ -1,98 +1,53 @@
 'use client';
 
-import { useMemo } from 'react';
-
-import { Computer, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 import { cn } from '../lib/utils';
-import { Button } from '../shadcn/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
 } from '../shadcn/dropdown-menu';
 import { Trans } from './trans';
 
-const MODES = ['light', 'dark', 'system'];
-
 export function ModeToggle(props: { className?: string }) {
   const { setTheme, theme } = useTheme();
+  
+  const isDark = theme === 'dark';
 
-  const Items = useMemo(() => {
-    return MODES.map((mode) => {
-      const isSelected = theme === mode;
-
-      return (
-        <DropdownMenuItem
-          className={cn('space-x-2', {
-            'bg-muted': isSelected,
-          })}
-          key={mode}
-          onClick={() => {
-            setTheme(mode);
-            setCookeTheme(mode);
-          }}
-        >
-          <Icon theme={mode} />
-
-          <span>
-            <Trans i18nKey={`common:${mode}Theme`} />
-          </span>
-        </DropdownMenuItem>
-      );
-    });
-  }, [setTheme, theme]);
+  const handleToggle = () => {
+    const newTheme = isDark ? 'light' : 'dark';
+    setTheme(newTheme);
+    setCookeTheme(newTheme);
+  };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className={props.className}>
-          <Sun className="h-[0.9rem] w-[0.9rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-          <Moon className="absolute h-[0.9rem] w-[0.9rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align="end">{Items}</DropdownMenuContent>
-    </DropdownMenu>
+    <button
+      onClick={handleToggle}
+      className={cn("flex items-center justify-center p-2 rounded-md hover:bg-muted transition-colors", props.className)}
+      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+    >
+      {isDark ? (
+        <Sun className="h-4 w-4" />
+      ) : (
+        <Moon className="h-4 w-4" />
+      )}
+    </button>
   );
 }
 
 export function SubMenuModeToggle() {
-  const { setTheme, theme, resolvedTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
+  
+  const isDark = theme === 'dark';
 
-  const MenuItems = useMemo(
-    () =>
-      MODES.map((mode) => {
-        const isSelected = theme === mode;
-
-        return (
-          <DropdownMenuItem
-            className={cn('flex cursor-pointer items-center space-x-2', {
-              'bg-muted': isSelected,
-            })}
-            key={mode}
-            onClick={() => {
-              setTheme(mode);
-              setCookeTheme(mode);
-            }}
-          >
-            <Icon theme={mode} />
-
-            <span>
-              <Trans i18nKey={`common:${mode}Theme`} />
-            </span>
-          </DropdownMenuItem>
-        );
-      }),
-    [setTheme, theme],
-  );
+  const handleToggle = () => {
+    const newTheme = isDark ? 'light' : 'dark';
+    setTheme(newTheme);
+    setCookeTheme(newTheme);
+  };
 
   return (
     <>
@@ -103,7 +58,7 @@ export function SubMenuModeToggle() {
           }
         >
           <span className={'flex space-x-2'}>
-            <Icon theme={resolvedTheme} />
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
 
             <span>
               <Trans i18nKey={'common:theme'} />
@@ -111,15 +66,39 @@ export function SubMenuModeToggle() {
           </span>
         </DropdownMenuSubTrigger>
 
-        <DropdownMenuSubContent>{MenuItems}</DropdownMenuSubContent>
+        <DropdownMenuSubContent>
+          <button
+            onClick={handleToggle}
+            className="p-2 hover:bg-muted rounded-md transition-colors w-full flex items-center justify-center"
+            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
+        </DropdownMenuSubContent>
       </DropdownMenuSub>
 
       <div className={'lg:hidden'}>
         <DropdownMenuLabel>
           <Trans i18nKey={'common:theme'} />
         </DropdownMenuLabel>
-
-        {MenuItems}
+        
+        <div className="px-2 py-1">
+          <button
+            onClick={handleToggle}
+            className="hover:bg-muted rounded-md transition-colors w-full p-1 flex items-center justify-center"
+            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
+        </div>
       </div>
     </>
   );
@@ -127,15 +106,4 @@ export function SubMenuModeToggle() {
 
 function setCookeTheme(theme: string) {
   document.cookie = `theme=${theme}; path=/; max-age=31536000`;
-}
-
-function Icon({ theme }: { theme: string | undefined }) {
-  switch (theme) {
-    case 'light':
-      return <Sun className="h-4" />;
-    case 'dark':
-      return <Moon className="h-4" />;
-    case 'system':
-      return <Computer className="h-4" />;
-  }
 }

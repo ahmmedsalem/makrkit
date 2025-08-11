@@ -3,6 +3,7 @@ import { use } from 'react';
 import { PageBody, PageHeader } from '@kit/ui/page';
 import { Trans } from '@kit/ui/trans';
 
+import { HeaderSwitchers } from '~/components/header-switchers';
 import { DashboardDemo } from '~/home/_components/dashboard-demo';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
 
@@ -11,7 +12,9 @@ export default function HomePage() {
 
   return (
     <>
-      <PageHeader description={<Trans i18nKey="common:dashboardTabLabel" />} />
+      <PageHeader description={<Trans i18nKey="common:dashboardTabLabel" />}>
+        <HeaderSwitchers />
+      </PageHeader>
 
       <PageBody>
         <DashboardDemo userId={userId} />

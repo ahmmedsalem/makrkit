@@ -16,8 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@kit/ui/dropdown-menu';
 import { If } from '@kit/ui/if';
-import { SubMenuLanguageToggle } from '@kit/ui/language-toggle';
-import { SubMenuModeToggle } from '@kit/ui/mode-toggle';
 import { ProfileAvatar } from '@kit/ui/profile-avatar';
 import { Trans } from '@kit/ui/trans';
 import { cn } from '@kit/ui/utils';
@@ -47,9 +45,6 @@ export function PersonalAccountDropdown({
     home: string;
   };
 
-  features: {
-    enableThemeToggle: boolean;
-  };
 
   showProfileName?: boolean;
 
@@ -146,14 +141,6 @@ export function PersonalAccountDropdown({
             </span>
           </Link>
         </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <SubMenuLanguageToggle />
-
-        <If condition={features.enableThemeToggle}>
-          <SubMenuModeToggle />
-        </If>
 
         <DropdownMenuSeparator />
 

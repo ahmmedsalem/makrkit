@@ -54,13 +54,20 @@ function SuspendedPersonalAccountDropdown(props: { user: User | null }) {
 
   if (userData) {
     return (
-      <PersonalAccountDropdown
-        showProfileName={false}
-        paths={paths}
-        features={features}
-        user={userData}
-        signOutRequested={() => signOut.mutateAsync()}
-      />
+      <div className={'flex items-center space-x-2'}>
+        <LanguageToggle />
+        
+        <If condition={features.enableThemeToggle}>
+          <ModeToggle />
+        </If>
+
+        <PersonalAccountDropdown
+          showProfileName={false}
+          paths={paths}
+          user={userData}
+          signOutRequested={() => signOut.mutateAsync()}
+        />
+      </div>
     );
   }
 
