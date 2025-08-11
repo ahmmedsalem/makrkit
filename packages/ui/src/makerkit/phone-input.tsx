@@ -17,7 +17,6 @@ import { Input } from '../shadcn/input';
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover';
 import { cn } from '../lib/utils';
 
-// Common country codes with flags and names
 const COUNTRIES = [
   { code: '+1', country: 'US', name: 'United States', flag: '🇺🇸' },
   { code: '+1', country: 'CA', name: 'Canada', flag: '🇨🇦' },
@@ -88,8 +87,8 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
 
     // Parse the current value to extract country code and phone number
     const parsePhoneValue = (phoneValue: string) => {
-      if (!phoneValue) return { countryCode: selectedCountry.code, phoneNumber: '' };
-      
+      if (!phoneValue) return { countryCode: selectedCountry?.code, phoneNumber: '' };
+
       // Find matching country code
       const matchingCountry = COUNTRIES.find(country => phoneValue.startsWith(country.code));
       if (matchingCountry) {
@@ -98,8 +97,8 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
           phoneNumber: phoneValue.slice(matchingCountry.code.length).trim()
         };
       }
-      
-      return { countryCode: selectedCountry.code, phoneNumber: phoneValue };
+
+      return { countryCode: selectedCountry?.code, phoneNumber: phoneValue };
     };
 
     const { countryCode, phoneNumber } = parsePhoneValue(value);
@@ -113,7 +112,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
 
     const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const newPhoneNumber = e.target.value.replace(/[^\d\s-()]/g, ''); // Allow only digits, spaces, hyphens, and parentheses
-      const newValue = selectedCountry.code + (newPhoneNumber ? ' ' + newPhoneNumber : '');
+      const newValue = selectedCountry?.code + (newPhoneNumber ? ' ' + newPhoneNumber : '');
       onChange?.(newValue);
     };
 
@@ -125,12 +124,12 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-[140px] justify-between rounded-r-none border-r-0"
+              className="w-[140px] justify-between rounded-r-none border-r-0 rtl:rounded-r-none rtl:rounded-l-none rtl:rounded-tr-md rtl:rounded-br-md rtl:border-r rtl:border-l-0"
               disabled={disabled}
             >
               <span className="flex items-center gap-2">
-                <span className="text-lg">{selectedCountry.flag}</span>
-                <span className="font-mono text-sm">{selectedCountry.code}</span>
+                <span className="text-lg">{selectedCountry?.flag}</span>
+                <span className="font-mono text-sm">{selectedCountry?.code}</span>
               </span>
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -150,7 +149,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
                       <Check
                         className={cn(
                           'mr-2 h-4 w-4',
-                          selectedCountry.code === country.code && selectedCountry.country === country.country
+                          selectedCountry?.code === country.code && selectedCountry.country === country.country
                             ? 'opacity-100'
                             : 'opacity-0'
                         )}
@@ -174,7 +173,7 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
           disabled={disabled}
-          className="rounded-l-none"
+          className="rounded-l-none rtl:rounded-l-none rtl:rounded-r-none rtl:rounded-tl-md rtl:rounded-bl-md"
         />
       </div>
     );
