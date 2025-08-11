@@ -19,6 +19,7 @@ import { UpdateEmailFormContainer } from './email/update-email-form-container';
 import { UpdatePasswordFormContainer } from './password/update-password-container';
 import { UpdateAccountDetailsFormContainer } from './update-account-details-form-container';
 import { UpdateAccountImageContainer } from './update-account-image-container';
+import { UpdatePhoneNumberFormContainer } from './update-phone-number-form-container';
 
 export function PersonalAccountSettingsContainer(
   props: React.PropsWithChildren<{
@@ -77,6 +78,22 @@ export function PersonalAccountSettingsContainer(
 
         <CardContent>
           <UpdateAccountDetailsFormContainer user={user.data} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <Trans i18nKey={'account:phoneNumber'} />
+          </CardTitle>
+
+          <CardDescription>
+            <Trans i18nKey={'account:phoneNumberDescription'} />
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <UpdatePhoneNumberFormContainer user={user.data} />
         </CardContent>
       </Card>
 

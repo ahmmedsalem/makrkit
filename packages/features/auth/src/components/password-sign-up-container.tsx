@@ -38,16 +38,24 @@ export function EmailPasswordSignUpContainer({
   const loading = signUpMutation.isPending || redirecting.current;
 
   const onSignupRequested = useCallback(
-    async (credentials: { email: string; password: string }) => {
+    async (credentials: { email: string; password: string; phoneNumber: string }) => {
       if (loading) {
         return;
       }
 
       try {
+        // For now, we'll store the phone number as user metadata
+        // You can modify this to store it in your database as needed
         const data = await signUpMutation.mutateAsync({
-          ...credentials,
+          email: credentials.email,
+          password: credentials.password,
           emailRedirectTo,
           captchaToken,
+          options: {
+            data: {
+              phone_number: credentials.phoneNumber,
+            },
+          },
         });
 
         setShowVerifyEmailAlert(true);

@@ -17,6 +17,7 @@ import {
 } from '@kit/ui/form';
 import { If } from '@kit/ui/if';
 import { Input } from '@kit/ui/input';
+import { PhoneInput } from '@kit/ui/phone-input';
 import { Trans } from '@kit/ui/trans';
 
 import { PasswordSignUpSchema } from '../schemas/password-sign-up.schema';
@@ -38,6 +39,7 @@ export function PasswordSignUpForm({
     email: string;
     password: string;
     repeatPassword: string;
+    phoneNumber: string;
   }) => unknown;
   loading: boolean;
 }) {
@@ -49,6 +51,7 @@ export function PasswordSignUpForm({
       email: defaultValues?.email ?? '',
       password: '',
       repeatPassword: '',
+      phoneNumber: '',
     },
   });
 
@@ -74,6 +77,29 @@ export function PasswordSignUpForm({
                   type="email"
                   placeholder={t('emailPlaceholder')}
                   {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name={'phoneNumber'}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Trans i18nKey={'common:phoneNumber'} />
+              </FormLabel>
+
+              <FormControl>
+                <PhoneInput
+                  data-test={'phone-input'}
+                  placeholder={t('auth:phonePlaceholder')}
+                  value={field.value}
+                  onChange={field.onChange}
                 />
               </FormControl>
 

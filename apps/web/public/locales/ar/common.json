@@ -12,6 +12,7 @@
   "dashboardTabDescription": "نظرة عامة على نشاط حسابك وأدائه عبر جميع مشاريعك.",
   "settingsTabDescription": "إدارة إعداداتك وتفضيلاتك.",
   "emailAddress": "عنوان البريد الإلكتروني",
+  "phoneNumber": "رقم الهاتف",
   "password": "كلمة المرور",
   "modalConfirmationQuestion": "هل أنت متأكد من أنك تريد المتابعة؟",
   "imageInputLabel": "انقر هنا لتحميل صورة",

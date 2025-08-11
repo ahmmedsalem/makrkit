@@ -17,31 +17,16 @@ const routes = [
         Icon: <Home className={iconClasses} />,
         end: true,
       },
-    ],
-  },
-  {
-    label: 'common:routes.marketNews',
-    children: [
       {
         label: 'common:routes.marketNews',
         path: pathsConfig.app.marketNews,
         Icon: <TrendingUp className={iconClasses} />,
       },
-    ],
-  },
-  {
-    label: 'common:routes.screener',
-    children: [
       {
         label: 'common:routes.screener',
         path: pathsConfig.app.screener,
         Icon: <MonitorUp className={iconClasses} />,
       },
-    ],
-  },
-  {
-    label: 'common:routes.wallet',
-    children: [
       {
         label: 'common:routes.wallet',
         path: pathsConfig.app.wallet,

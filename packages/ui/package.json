@@ -126,6 +126,7 @@
     "./multi-step-form": "./src/makerkit/multi-step-form.tsx",
     "./app-breadcrumbs": "./src/makerkit/app-breadcrumbs.tsx",
     "./empty-state": "./src/makerkit/empty-state.tsx",
+    "./phone-input": "./src/phone-input.ts",
     "./marketing": "./src/makerkit/marketing/index.tsx"
   },
   "typesVersions": {

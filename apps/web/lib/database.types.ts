@@ -36,35 +36,47 @@ export type Database = {
     Tables: {
       accounts: {
         Row: {
+          amount_invested: number;
           created_at: string | null;
           created_by: string | null;
           email: string | null;
           id: string;
           name: string;
+          phone_number: string | null;
           picture_url: string | null;
           public_data: Json;
+          return_percentage: number;
+          total_profit: number;
           updated_at: string | null;
           updated_by: string | null;
         };
         Insert: {
+          amount_invested?: number;
           created_at?: string | null;
           created_by?: string | null;
           email?: string | null;
           id?: string;
           name: string;
+          phone_number?: string | null;
           picture_url?: string | null;
           public_data?: Json;
+          return_percentage?: number;
+          total_profit?: number;
           updated_at?: string | null;
           updated_by?: string | null;
         };
         Update: {
+          amount_invested?: number;
           created_at?: string | null;
           created_by?: string | null;
           email?: string | null;
           id?: string;
           name?: string;
+          phone_number?: string | null;
           picture_url?: string | null;
           public_data?: Json;
+          return_percentage?: number;
+          total_profit?: number;
           updated_at?: string | null;
           updated_by?: string | null;
         };

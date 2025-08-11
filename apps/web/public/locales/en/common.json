@@ -12,6 +12,7 @@
   "dashboardTabDescription": "An overview of your account's activity and performance across all your projects.",
   "settingsTabDescription": "Manage your settings and preferences.",
   "emailAddress": "Email Address",
+  "phoneNumber": "Phone Number",
   "password": "Password",
   "modalConfirmationQuestion": "Are you sure you want to continue?",
   "imageInputLabel": "Click here to upload an image",
