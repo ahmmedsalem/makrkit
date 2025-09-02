@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import React from 'react';
 
 import Link from 'next/link';
 
@@ -110,7 +110,7 @@ export default async function Home({
   const user = await requireUserInServerComponent();
   const tickers = isMarketOpen() ? tickerAfterOpen : tickersFutures;
 
-  const ticker = searchParams?.ticker || tickers[0]?.symbol;
+  const ticker = searchParams?.ticker || tickers[0]?.symbol || 'SPY';
   const range = validateRange(searchParams?.range || DEFAULT_RANGE);
   const interval = validateInterval(
     range,
@@ -134,14 +134,14 @@ export default async function Home({
     console.error('Failed to fetch market data:', error);
   }
 
-  const resultsWithTitles = results.map((result, index) => ({
+  const resultsWithTitles = results.length > 0 ? results.map((result, index) => ({
     ...result,
     shortName: tickers?.[index]?.shortName,
-  }));
+  })) : [];
 
-  const marketSentiment = getMarketSentiment(
-    resultsWithTitles?.[0]?.regularMarketChangePercent,
-  );
+  const marketSentiment = resultsWithTitles.length > 0 
+    ? getMarketSentiment(resultsWithTitles[0]?.regularMarketChangePercent)
+    : 'neutral';
 
   const sentimentColor =
     marketSentiment === 'bullish'
@@ -170,18 +170,27 @@ export default async function Home({
                     <strong className={sentimentColor}>{marketSentiment}</strong>
                   </CardTitle>
                 </CardHeader>
-                {news.news[0] && news.news[0].title && (
+                {news?.news?.[0]?.title ? (
                   <CardFooter className="flex-col items-start">
                     <p className="mb-2 text-sm font-semibold text-neutral-500 dark:text-neutral-500">
                       What you need to know today
                     </p>
                     <Link
                       prefetch={false}
-                      href={news.news[0].link}
+                      href={news.news[0].link || '#'}
                       className="text-lg font-extrabold"
                     >
                       {news.news[0].title}
                     </Link>
+                  </CardFooter>
+                ) : (
+                  <CardFooter className="flex-col items-start">
+                    <p className="mb-2 text-sm font-semibold text-neutral-500 dark:text-neutral-500">
+                      Market News
+                    </p>
+                    <p className="text-lg font-extrabold">
+                      Stay informed with the latest market updates
+                    </p>
                   </CardFooter>
                 )}
                 <div
@@ -195,9 +204,9 @@ export default async function Home({
                   <CardTitle className="text-lg">Sector Performance</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <SectorPerformance />
-                  </Suspense>
+                  <div>
+                  <SectorPerformance />
+                </div>
                 </CardContent>
               </Card>
             </div>
@@ -206,18 +215,14 @@ export default async function Home({
             <h2 className="py-4 text-xl font-medium">Markets</h2>
             <Card className="flex flex-col gap-4 p-6 lg:flex-row">
               <div className="w-full lg:w-1/2">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <DataTable columns={columns} data={resultsWithTitles} />
-                </Suspense>
+                <DataTable columns={columns} data={resultsWithTitles} />
               </div>
               <div className="w-full lg:w-1/2">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <MarketsChart
-                    ticker={ticker}
-                    range={range}
-                    interval={interval}
-                  />
-                </Suspense>
+                <MarketsChart
+                  ticker={ticker}
+                  range={range}
+                  interval={interval}
+                />
               </div>
             </Card>
           </div>
