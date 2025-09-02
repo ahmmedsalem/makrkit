@@ -1,4 +1,4 @@
-import { Suspense, use } from 'react';
+import { Suspense } from 'react';
 
 import Link from 'next/link';
 
@@ -107,7 +107,7 @@ export default async function Home({
     interval?: string;
   };
 }) {
-  const user = use(requireUserInServerComponent());
+  const user = await requireUserInServerComponent();
   const tickers = isMarketOpen() ? tickerAfterOpen : tickersFutures;
 
   const ticker = searchParams?.ticker || tickers[0]?.symbol;
@@ -116,12 +116,23 @@ export default async function Home({
     range,
     (searchParams?.interval as Interval) || DEFAULT_INTERVAL,
   );
-  const news = await fetchStockSearch('^DJI', 1);
+  let news: any = { news: [] };
+  let results: any[] = [];
+  
+  try {
+    news = await fetchStockSearch('^DJI', 1);
+  } catch (error) {
+    console.error('Failed to fetch news:', error);
+  }
 
-  const promises = tickers.map(({ symbol }) =>
-    yahooFinance.quoteCombine(symbol),
-  );
-  const results = await Promise.all(promises);
+  try {
+    const promises = tickers.map(({ symbol }) =>
+      yahooFinance.quoteCombine(symbol),
+    );
+    results = await Promise.all(promises);
+  } catch (error) {
+    console.error('Failed to fetch market data:', error);
+  }
 
   const resultsWithTitles = results.map((result, index) => ({
     ...result,
