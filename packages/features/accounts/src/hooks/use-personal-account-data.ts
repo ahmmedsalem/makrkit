@@ -12,6 +12,8 @@ export interface AccountData {
   amount_invested: number | null;
   total_profit: number | null;
   return_percentage: number | null;
+  status: 'active' | 'inactive' | 'pending';
+  phone_number: string | null;
 }
 
 // Define a partial version for initial hydration (optional)
@@ -38,7 +40,9 @@ export function usePersonalAccountData(
         picture_url,
         amount_invested,
         total_profit,
-        return_percentage
+        return_percentage,
+        status,
+        phone_number
       `,
       )
       .eq('id', userId)
@@ -47,7 +51,6 @@ export function usePersonalAccountData(
     if (error) {
       throw error;
     }
-
     return data;
   };
 
@@ -65,6 +68,8 @@ export function usePersonalAccountData(
           amount_invested: partialAccount.amount_invested ?? null,
           total_profit: partialAccount.total_profit ?? null,
           return_percentage: partialAccount.return_percentage ?? null,
+          status: partialAccount.status ?? 'pending',
+          phone_number: partialAccount.phone_number ?? null,
         }
       : undefined,
   });

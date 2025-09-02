@@ -11,12 +11,19 @@
   "exports": {
     "./personal-account-dropdown": "./src/components/personal-account-dropdown.tsx",
     "./personal-account-settings": "./src/components/account-settings-container.tsx",
+    "./account-inactive-notification": "./src/components/account-inactive-notification.tsx",
+    "./account-pending-notification": "./src/components/account-pending-notification.tsx",
+    "./account-status-badge": "./src/components/account-status-badge.tsx",
     "./components": "./src/components/index.ts",
     "./hooks/*": "./src/hooks/*.ts",
+    "./utils/account-access": "./src/utils/account-access.ts",
+    "./utils/verification-helpers": "./src/utils/verification-helpers.ts",
+    "./server/send-verification-email": "./src/server/send-verification-email.ts",
     "./api": "./src/server/api.ts"
   },
   "dependencies": {
-    "nanoid": "^5.0.9"
+    "nanoid": "^5.0.9",
+    "resend": "^6.0.2"
   },
   "devDependencies": {
     "@hookform/resolvers": "^4.1.0",
@@ -30,6 +37,7 @@
     "@radix-ui/react-icons": "^1.3.2",
     "@supabase/supabase-js": "2.48.1",
     "@tanstack/react-query": "5.64.1",
+    "@types/node": "^22.13.4",
     "@types/react": "npm:types-react@19.0.0-rc.1",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "lucide-react": "^0.475.0",

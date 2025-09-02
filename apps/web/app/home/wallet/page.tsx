@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { useUser } from "@kit/supabase/hooks/use-user";
 import { useCreateWithdrawal } from "@kit/supabase/hooks/use-withdrawal";
 import { usePersonalAccountData } from "@kit/accounts/hooks/use-personal-account-data";
+import { RequireActiveAccount } from "~/home/_components/require-active-account";
 
 // Schema for form validation
 const WithdrawalSchema = z
@@ -375,7 +376,8 @@ export default function WithdrawPage() {
 
     return (
         <PageBody>
-            <div className="flex flex-col space-y-8">
+            <RequireActiveAccount user={user.data!}>
+                <div className="flex flex-col space-y-8">
                 {/* Page Header */}
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold">
@@ -568,6 +570,7 @@ export default function WithdrawPage() {
                     </div>
                 </div>
             </div>
+            </RequireActiveAccount>
         </PageBody>
     );
 }

@@ -20,7 +20,8 @@ import { ProfileAvatar } from '@kit/ui/profile-avatar';
 import { Trans } from '@kit/ui/trans';
 import { cn } from '@kit/ui/utils';
 
-import { usePersonalAccountData } from '../hooks/use-personal-account-data';
+import { usePersonalAccountData, type PartialAccountData } from '../hooks/use-personal-account-data';
+import { AccountStatusBadge } from './account-status-badge';
 
 export function PersonalAccountDropdown({
   className,
@@ -45,12 +46,13 @@ export function PersonalAccountDropdown({
     home: string;
   };
 
+  features?: any;
 
   showProfileName?: boolean;
 
   className?: string;
 }) {
-  const personalAccountData = usePersonalAccountData(user.id, account);
+  const personalAccountData = usePersonalAccountData(user.id, account?.id ? account as PartialAccountData : undefined);
 
   const signedInAsLabel = useMemo(() => {
     const email = user?.email ?? undefined;
@@ -89,12 +91,20 @@ export function PersonalAccountDropdown({
               'fade-in animate-in flex w-full flex-col truncate text-left group-data-[minimized=true]:hidden'
             }
           >
-            <span
-              data-test={'account-dropdown-display-name'}
-              className={'truncate text-sm'}
-            >
-              {displayName}
-            </span>
+            <div className={'flex items-center gap-2'}>
+              <span
+                data-test={'account-dropdown-display-name'}
+                className={'truncate text-sm'}
+              >
+                {displayName}
+              </span>
+              {personalAccountData?.data?.status && (
+                <AccountStatusBadge 
+                  status={personalAccountData.data.status}
+                  className={'shrink-0'}
+                />
+              )}
+            </div>
 
             <span
               data-test={'account-dropdown-email'}

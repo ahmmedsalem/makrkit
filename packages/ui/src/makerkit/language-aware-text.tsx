@@ -5,7 +5,7 @@ import { cn } from '../lib/utils';
 
 interface LanguageAwareTextProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType;
   className?: string;
 }
 

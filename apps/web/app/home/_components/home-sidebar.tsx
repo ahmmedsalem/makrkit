@@ -13,14 +13,16 @@ import {
 
 import { AppLogo } from '~/components/app-logo';
 import { ProfileAccountDropdownContainer } from '~/components/personal-account-dropdown-container';
-import { navigationConfig } from '~/config/navigation.config';
 import { Tables } from '~/lib/database.types';
+
+import { useFilteredNavigation } from './use-filtered-navigation';
 
 export function HomeSidebar(props: {
   account?: Tables<'accounts'>;
   user: User;
 }) {
   const { state } = useSidebar();
+  const filteredConfig = useFilteredNavigation(props.user.id);
 
   return (
     <Sidebar collapsible={'icon'}>
@@ -33,7 +35,7 @@ export function HomeSidebar(props: {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarNavigation config={navigationConfig} />
+        <SidebarNavigation config={filteredConfig} />
       </SidebarContent>
 
       <SidebarFooter>

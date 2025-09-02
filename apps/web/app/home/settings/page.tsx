@@ -5,6 +5,7 @@ import { PageBody } from '@kit/ui/page';
 
 import authConfig from '~/config/auth.config';
 import pathsConfig from '~/config/paths.config';
+import { AccountStatusWrapper } from '~/home/_components/account-status-wrapper';
 import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
 import { withI18n } from '~/lib/i18n/with-i18n';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
@@ -30,16 +31,18 @@ export const generateMetadata = async () => {
 };
 
 function PersonalAccountSettingsPage() {
-  const userId = use(requireUserInServerComponent()).id;
+  const user = use(requireUserInServerComponent());
 
   return (
     <PageBody>
       <div className={'flex w-full flex-1 flex-col lg:max-w-2xl'}>
-        <PersonalAccountSettingsContainer
-          userId={userId}
-          paths={paths}
-          features={features}
-        />
+        <AccountStatusWrapper user={user} showForProfile={true}>
+          <PersonalAccountSettingsContainer
+            userId={user.id}
+            paths={paths}
+            features={features}
+          />
+        </AccountStatusWrapper>
       </div>
     </PageBody>
   );

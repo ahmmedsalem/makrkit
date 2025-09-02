@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, use } from 'react';
 
 import Link from 'next/link';
 
@@ -18,6 +18,7 @@ import MarketsChart from '~/components/chart/MarketsChart';
 import SectorPerformance from '~/components/stocks/SectorPerformance';
 import { columns } from '~/components/stocks/markets/columns';
 import { DataTable } from '~/components/stocks/markets/data-table';
+import { RequireActiveAccount } from '~/home/_components/require-active-account';
 import {
   DEFAULT_INTERVAL,
   DEFAULT_RANGE,
@@ -27,6 +28,7 @@ import {
   validateRange,
 } from '~/lib/stocklib/yahoo-finance/fetchChartData';
 import { fetchStockSearch } from '~/lib/stocklib/yahoo-finance/fetchStockSearch';
+import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
 
 function isMarketOpen() {
   const now = new Date();
@@ -105,6 +107,7 @@ export default async function Home({
     interval?: string;
   };
 }) {
+  const user = use(requireUserInServerComponent());
   const tickers = isMarketOpen() ? tickerAfterOpen : tickersFutures;
 
   const ticker = searchParams?.ticker || tickers[0]?.symbol;
@@ -145,68 +148,70 @@ export default async function Home({
 
   return (
     <PageBody>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-4 lg:flex-row">
-          <div className="w-full lg:w-1/2">
-            <Card className="relative flex h-full min-h-[15rem] flex-col justify-between overflow-hidden">
-              <CardHeader>
-                <CardTitle className="z-50 w-fit rounded-full px-4 py-2 font-medium dark:bg-neutral-100/5">
-                  The markets are{' '}
-                  <strong className={sentimentColor}>{marketSentiment}</strong>
-                </CardTitle>
-              </CardHeader>
-              {news.news[0] && news.news[0].title && (
-                <CardFooter className="flex-col items-start">
-                  <p className="mb-2 text-sm font-semibold text-neutral-500 dark:text-neutral-500">
-                    What you need to know today
-                  </p>
-                  <Link
-                    prefetch={false}
-                    href={news.news[0].link}
-                    className="text-lg font-extrabold"
-                  >
-                    {news.news[0].title}
-                  </Link>
-                </CardFooter>
-              )}
-              <div
-                className={`pointer-events-none absolute inset-0 z-0 h-[65%] w-[65%] -translate-x-[10%] -translate-y-[30%] rounded-full blur-3xl ${sentimentBackground}`}
-              />
-            </Card>
-          </div>
-          <div className="w-full lg:w-1/2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Sector Performance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Suspense fallback={<div>Loading...</div>}>
-                  <SectorPerformance />
-                </Suspense>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-        <div>
-          <h2 className="py-4 text-xl font-medium">Markets</h2>
-          <Card className="flex flex-col gap-4 p-6 lg:flex-row">
+      <RequireActiveAccount user={user}>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 lg:flex-row">
             <div className="w-full lg:w-1/2">
-              <Suspense fallback={<div>Loading...</div>}>
-                <DataTable columns={columns} data={resultsWithTitles} />
-              </Suspense>
-            </div>
-            <div className="w-full lg:w-1/2">
-              <Suspense fallback={<div>Loading...</div>}>
-                <MarketsChart
-                  ticker={ticker}
-                  range={range}
-                  interval={interval}
+              <Card className="relative flex h-full min-h-[15rem] flex-col justify-between overflow-hidden">
+                <CardHeader>
+                  <CardTitle className="z-50 w-fit rounded-full px-4 py-2 font-medium dark:bg-neutral-100/5">
+                    The markets are{' '}
+                    <strong className={sentimentColor}>{marketSentiment}</strong>
+                  </CardTitle>
+                </CardHeader>
+                {news.news[0] && news.news[0].title && (
+                  <CardFooter className="flex-col items-start">
+                    <p className="mb-2 text-sm font-semibold text-neutral-500 dark:text-neutral-500">
+                      What you need to know today
+                    </p>
+                    <Link
+                      prefetch={false}
+                      href={news.news[0].link}
+                      className="text-lg font-extrabold"
+                    >
+                      {news.news[0].title}
+                    </Link>
+                  </CardFooter>
+                )}
+                <div
+                  className={`pointer-events-none absolute inset-0 z-0 h-[65%] w-[65%] -translate-x-[10%] -translate-y-[30%] rounded-full blur-3xl ${sentimentBackground}`}
                 />
-              </Suspense>
+              </Card>
             </div>
-          </Card>
+            <div className="w-full lg:w-1/2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Sector Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <SectorPerformance />
+                  </Suspense>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          <div>
+            <h2 className="py-4 text-xl font-medium">Markets</h2>
+            <Card className="flex flex-col gap-4 p-6 lg:flex-row">
+              <div className="w-full lg:w-1/2">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <DataTable columns={columns} data={resultsWithTitles} />
+                </Suspense>
+              </div>
+              <div className="w-full lg:w-1/2">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarketsChart
+                    ticker={ticker}
+                    range={range}
+                    interval={interval}
+                  />
+                </Suspense>
+              </div>
+            </Card>
+          </div>
         </div>
-      </div>
+      </RequireActiveAccount>
     </PageBody>
   );
 }

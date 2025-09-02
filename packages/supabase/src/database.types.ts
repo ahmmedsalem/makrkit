@@ -46,6 +46,7 @@ export type Database = {
           picture_url: string | null;
           public_data: Json;
           return_percentage: number;
+          status: Database['public']['Enums']['account_status'];
           total_profit: number;
           updated_at: string | null;
           updated_by: string | null;
@@ -61,6 +62,7 @@ export type Database = {
           picture_url?: string | null;
           public_data?: Json;
           return_percentage?: number;
+          status?: Database['public']['Enums']['account_status'];
           total_profit?: number;
           updated_at?: string | null;
           updated_by?: string | null;
@@ -76,11 +78,78 @@ export type Database = {
           picture_url?: string | null;
           public_data?: Json;
           return_percentage?: number;
+          status?: Database['public']['Enums']['account_status'];
           total_profit?: number;
           updated_at?: string | null;
           updated_by?: string | null;
         };
         Relationships: [];
+      };
+      verification_requests: {
+        Row: {
+          id: string;
+          user_id: string;
+          account_id: string;
+          full_name: string;
+          phone_number: string;
+          personal_photo_url: string;
+          id_document_url: string;
+          status: Database['public']['Enums']['verification_request_status'];
+          submitted_at: string;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          rejection_reason: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          account_id: string;
+          full_name: string;
+          phone_number: string;
+          personal_photo_url: string;
+          id_document_url: string;
+          status?: Database['public']['Enums']['verification_request_status'];
+          submitted_at?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          rejection_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          account_id?: string;
+          full_name?: string;
+          phone_number?: string;
+          personal_photo_url?: string;
+          id_document_url?: string;
+          status?: Database['public']['Enums']['verification_request_status'];
+          submitted_at?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          rejection_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'verification_requests_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'verification_requests_account_id_fkey';
+            columns: ['account_id'];
+            isOneToOne: false;
+            referencedRelation: 'accounts';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       withdrawals: {
         Row: {
@@ -146,7 +215,9 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
+      account_status: 'active' | 'inactive' | 'pending';
       payment_method: 'paypal' | 'stripe' | 'bank' | 'crypto';
+      verification_request_status: 'pending' | 'approved' | 'rejected';
     };
     CompositeTypes: {
       [_ in never]: never;
