@@ -1,4 +1,4 @@
-import { use } from 'react';
+import React from 'react';
 
 import { PersonalAccountSettingsContainer } from '@kit/accounts/personal-account-settings';
 import { PageBody } from '@kit/ui/page';
@@ -30,8 +30,8 @@ export const generateMetadata = async () => {
   };
 };
 
-function PersonalAccountSettingsPage() {
-  const user = use(requireUserInServerComponent());
+async function PersonalAccountSettingsPage() {
+  const user = await requireUserInServerComponent();
 
   return (
     <PageBody>

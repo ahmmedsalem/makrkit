@@ -1,4 +1,4 @@
-import { use } from 'react';
+import React from 'react';
 
 import { cookies } from 'next/headers';
 
@@ -21,8 +21,8 @@ import { HomeMenuNavigation } from './_components/home-menu-navigation';
 import { HomeMobileNavigation } from './_components/home-mobile-navigation';
 import { HomeSidebar } from './_components/home-sidebar';
 
-function HomeLayout({ children }: React.PropsWithChildren) {
-  const style = use(getLayoutStyle());
+async function HomeLayout({ children }: React.PropsWithChildren) {
+  const style = await getLayoutStyle();
 
   if (style === 'sidebar') {
     return <SidebarLayout>{children}</SidebarLayout>;
@@ -33,9 +33,9 @@ function HomeLayout({ children }: React.PropsWithChildren) {
 
 export default withI18n(HomeLayout);
 
-function SidebarLayout({ children }: React.PropsWithChildren) {
+async function SidebarLayout({ children }: React.PropsWithChildren) {
   const sidebarMinimized = navigationConfig.sidebarCollapsed;
-  const [user] = use(Promise.all([requireUserInServerComponent()]));
+  const [user] = await Promise.all([requireUserInServerComponent()]);
 
   return (
     <SidebarProvider defaultOpen={sidebarMinimized}>

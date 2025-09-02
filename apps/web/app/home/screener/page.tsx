@@ -1,4 +1,4 @@
-import { use } from 'react';
+import React from 'react';
 
 import { PageBody } from '@kit/ui/page';
 
@@ -17,10 +17,16 @@ export default async function ScreenerPage({
     screener?: string;
   };
 }) {
-  const user = use(requireUserInServerComponent());
+  const user = await requireUserInServerComponent();
   const screener = searchParams?.screener || DEFAULT_SCREENER;
 
-  const screenerDataResults = await fetchScreenerStocks(screener);
+  let screenerDataResults = { quotes: [] };
+  
+  try {
+    screenerDataResults = await fetchScreenerStocks(screener);
+  } catch (error) {
+    console.error('Failed to fetch screener data:', error);
+  }
 
   return (
     <PageBody>

@@ -1,4 +1,4 @@
-import { use } from 'react';
+import React from 'react';
 
 import { PageBody, PageHeader } from '@kit/ui/page';
 import { Trans } from '@kit/ui/trans';
@@ -8,8 +8,8 @@ import { DashboardDemo } from '~/home/_components/dashboard-demo';
 import { AccountStatusWrapper } from '~/home/_components/account-status-wrapper';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
 
-export default function HomePage() {
-  const user = use(requireUserInServerComponent());
+export default async function HomePage() {
+  const user = await requireUserInServerComponent();
 
   return (
     <>

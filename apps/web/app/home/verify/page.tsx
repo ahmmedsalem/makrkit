@@ -1,4 +1,4 @@
-import { use } from 'react';
+import React from 'react';
 
 import { PageBody, PageHeader } from '@kit/ui/page';
 import { Trans } from '@kit/ui/trans';
@@ -6,8 +6,8 @@ import { Trans } from '@kit/ui/trans';
 import { VerificationForm } from '~/home/verify/_components/verification-form';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
 
-export default function VerifyPage() {
-  const user = use(requireUserInServerComponent());
+export default async function VerifyPage() {
+  const user = await requireUserInServerComponent();
 
   return (
     <>

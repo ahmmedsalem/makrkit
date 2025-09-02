@@ -1,4 +1,4 @@
-import { use } from 'react';
+import React from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@kit/ui/card';
 import { PageBody, PageHeader } from '@kit/ui/page';
@@ -7,8 +7,8 @@ import { Badge } from '@kit/ui/badge';
 import { getVerificationWithImages } from '@kit/accounts/utils/verification-helpers';
 import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
 
-export default function AdminVerificationPage() {
-  const user = use(requireUserInServerComponent());
+export default async function AdminVerificationPage() {
+  const user = await requireUserInServerComponent();
 
   return (
     <>
