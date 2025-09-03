@@ -39,8 +39,11 @@ import {
 } from '@kit/ui/table';
 import { Trans } from '@kit/ui/trans';
 
-import ScreenerTableServer from '~/screener/screener-table-server';
 import TradingViewWidget from './trading-view-widget';
+import TradingViewWidgetSecond from './trading-view-widget-second';
+import TradingViewScreener from './trading-view-screener';
+import TradingViewAdvancedChart from './trading-view-advanced-chart';
+import TradingViewSymbolInfo from './trading-view-symbol-info';
 
 type DashboardDemoChartsProps = {
   userId: string;
@@ -139,7 +142,26 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
 
       <TradingViewWidget />
 
-      <PageViewsChart />
+
+      {/* Symbol Info Grid */}
+      <div
+        className={
+          'grid grid-cols-1 gap-4 md:grid-cols-2 mb-6'
+        }
+      >
+        <TradingViewSymbolInfo symbol="NASDAQ:AAPL" />
+        <TradingViewSymbolInfo symbol="NASDAQ:GOOGL" />
+      </div>
+      <div
+        className={
+          'mt-6'
+        }
+      >
+        <TradingViewScreener />
+      </div>
+      <TradingViewWidgetSecond />
+
+      <TradingViewAdvancedChart />
 
       <div>
         {/* <Card>
@@ -219,225 +241,6 @@ function Chart(
         />
       </LineChart>
     </ChartContainer>
-  );
-}
-
-function CustomersTable() {
-  const customers = [
-    {
-      name: 'John Doe',
-      email: 'john@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$120.5',
-      logins: 1020,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Emma Smith',
-      email: 'emma@makerit.dev',
-      plan: 'Basic',
-      mrr: '$65.4',
-      logins: 570,
-      status: 'Possible Churn',
-      trend: 'stale',
-    },
-    {
-      name: 'Robert Johnson',
-      email: 'robert@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$500.1',
-      logins: 2050,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Olivia Brown',
-      email: 'olivia@makerkit.dev',
-      plan: 'Basic',
-      mrr: '$10',
-      logins: 50,
-      status: 'Churn',
-      trend: 'down',
-    },
-    {
-      name: 'Michael Davis',
-      email: 'michael@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$300.2',
-      logins: 1520,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Emily Jones',
-      email: 'emily@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$75.7',
-      logins: 780,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Daniel Garcia',
-      email: 'daniel@makerkit.dev',
-      plan: 'Basic',
-      mrr: '$50',
-      logins: 320,
-      status: 'Possible Churn',
-      trend: 'stale',
-    },
-    {
-      name: 'Liam Miller',
-      email: 'liam@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$90.8',
-      logins: 1260,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Emma Clark',
-      email: 'emma@makerkit.dev',
-      plan: 'Basic',
-      mrr: '$0',
-      logins: 20,
-      status: 'Churn',
-      trend: 'down',
-    },
-    {
-      name: 'Elizabeth Rodriguez',
-      email: 'liz@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$145.3',
-      logins: 1380,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'James Martinez',
-      email: 'james@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$120.5',
-      logins: 940,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Charlotte Ryan',
-      email: 'carlotte@makerkit.dev',
-      plan: 'Basic',
-      mrr: '$80.6',
-      logins: 460,
-      status: 'Possible Churn',
-      trend: 'stale',
-    },
-    {
-      name: 'Lucas Evans',
-      email: 'lucas@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$210.3',
-      logins: 1850,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Sophia Wilson',
-      email: 'sophia@makerkit.dev',
-      plan: 'Basic',
-      mrr: '$10',
-      logins: 35,
-      status: 'Churn',
-      trend: 'down',
-    },
-    {
-      name: 'William Kelly',
-      email: 'will@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$350.2',
-      logins: 1760,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Oliver Thomas',
-      email: 'olly@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$145.6',
-      logins: 1350,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Samantha White',
-      email: 'sam@makerkit.dev',
-      plan: 'Basic',
-      mrr: '$60.3',
-      logins: 425,
-      status: 'Possible Churn',
-      trend: 'stale',
-    },
-    {
-      name: 'Benjamin Lewis',
-      email: 'ben@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$175.8',
-      logins: 1600,
-      status: 'Healthy',
-      trend: 'up',
-    },
-    {
-      name: 'Zoe Harris',
-      email: 'zoe@makerkit.dev',
-      plan: 'Basic',
-      mrr: '$0',
-      logins: 18,
-      status: 'Churn',
-      trend: 'down',
-    },
-    {
-      name: 'Zachary Nelson',
-      email: 'zac@makerkit.dev',
-      plan: 'Pro',
-      mrr: '$255.9',
-      logins: 1785,
-      status: 'Healthy',
-      trend: 'up',
-    },
-  ];
-
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Customer</TableHead>
-          <TableHead>Plan</TableHead>
-          <TableHead>MRR</TableHead>
-          <TableHead>Logins</TableHead>
-          <TableHead>Status</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {customers.map((customer) => (
-          <TableRow key={customer.name}>
-            <TableCell className={'flex flex-col'}>
-              <span>{customer.name}</span>
-              <span className={'text-muted-foreground text-sm'}>
-                {customer.email}
-              </span>
-            </TableCell>
-            <TableCell>{customer.plan}</TableCell>
-            <TableCell>{customer.mrr}</TableCell>
-            <TableCell>{customer.logins}</TableCell>
-            <TableCell>
-              <BadgeWithTrend trend={customer.trend}>
-                {customer.status}
-              </BadgeWithTrend>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
   );
 }
 
