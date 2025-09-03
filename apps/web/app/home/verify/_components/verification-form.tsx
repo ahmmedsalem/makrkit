@@ -76,7 +76,9 @@ export function VerificationForm({ user }: VerificationFormProps) {
     try {
       // Validate required files
       if (!formData.personalPhoto || !formData.idDocument) {
-        toast.error('Please upload both personal photo and government ID document.');
+        toast.error(
+          <Trans i18nKey="account:filesRequired" defaults="Please upload both personal photo and government ID document." />
+        );
         return;
       }
 
@@ -116,14 +118,18 @@ export function VerificationForm({ user }: VerificationFormProps) {
         throw updateError;
       }
 
-      toast.success('Verification request submitted successfully! We will review your submission and notify you once approved.');
+      toast.success(
+        <Trans i18nKey="account:verificationSubmissionSuccess" defaults="Verification request submitted successfully! We will review your submission and notify you once approved." />
+      );
       
       // Redirect back to home
       router.push('/home');
       router.refresh();
     } catch (error) {
       console.error('Verification error:', error);
-      toast.error('Failed to submit verification request. Please try again.');
+      toast.error(
+        <Trans i18nKey="account:verificationSubmissionError" defaults="Failed to submit verification request. Please try again." />
+      );
     } finally {
       setIsSubmitting(false);
     }
