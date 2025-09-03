@@ -139,6 +139,7 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
           </CardContent> */}
         </Card>
       </div>
+      <TradingViewScreener />
 
       <TradingViewWidget />
 
@@ -157,10 +158,8 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
           'mt-6'
         }
       >
-        <TradingViewScreener />
+        <TradingViewWidgetSecond />
       </div>
-      <TradingViewWidgetSecond />
-
       <TradingViewAdvancedChart />
 
       <div>
