@@ -248,12 +248,14 @@ export function VerificationForm({ user }: VerificationFormProps) {
 
           {/* Info Alert */}
           <Alert>
-            <CheckCircle className="h-4 w-4" />
             <AlertDescription>
-              <Trans 
-                i18nKey="account:verificationProcessInfo" 
-                defaults="Your verification request will be reviewed within 1-2 business days. You will be notified via email once your account is approved." 
-              />
+              <div className="flex items-start gap-2">
+                <CheckCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                <Trans 
+                  i18nKey="account:verificationProcessInfo" 
+                  defaults="Your verification request will be reviewed within 1-2 business days. You will be notified via email once your account is approved." 
+                />
+              </div>
             </AlertDescription>
           </Alert>
 

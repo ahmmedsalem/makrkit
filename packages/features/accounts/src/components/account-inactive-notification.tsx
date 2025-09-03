@@ -17,9 +17,9 @@ export function AccountInactiveNotification({
 }: AccountInactiveNotificationProps) {
   return (
     <Alert className={`border-destructive/50 bg-destructive/10 ${className || ''}`}>
-      <AlertTriangle className="h-4 w-4" />
       <AlertDescription className="flex items-center justify-between w-full">
-        <span className="flex-1">
+        <span className="flex items-center gap-2 flex-1">
+          <AlertTriangle className="h-4 w-4 shrink-0" />
           <Trans i18nKey="account:inactiveProfileMessage" 
                 defaults="Your profile is inactive until verification is completed. Please verify your account to access all features." />
         </span>
@@ -27,7 +27,7 @@ export function AccountInactiveNotification({
           asChild 
           size="sm" 
           variant="destructive"
-          className="ml-4 shrink-0"
+          className="ml-4 shrink-0 rtl:mr-4 rtl:ml-0"
         >
           <Link href="/home/verify">
             <Trans i18nKey="account:verifyAccount" defaults="Verify Account" />

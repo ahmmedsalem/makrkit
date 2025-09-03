@@ -14,17 +14,21 @@ export function AccountPendingNotification({
 }: AccountPendingNotificationProps) {
   return (
     <Alert className={`border-warning/50 bg-warning/10 ${className || ''}`}>
-      <Clock className="h-4 w-4" />
       <AlertDescription>
-        <span className="font-medium">
-          <Trans i18nKey="account:statusPending" defaults="Account Under Review" />
-        </span>
-        <span className="block text-sm mt-1">
-          <Trans 
-            i18nKey="account:pendingMessage" 
-            defaults="Your verification request is being reviewed. You will be notified via email once your account is approved. This process typically takes 1-2 business days." 
-          />
-        </span>
+        <div className="flex items-start gap-2">
+          <Clock className="h-4 w-4 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-medium">
+              <Trans i18nKey="account:statusPending" defaults="Account Under Review" />
+            </span>
+            <span className="block text-sm mt-1">
+              <Trans 
+                i18nKey="account:pendingMessage" 
+                defaults="Your verification request is being reviewed. You will be notified via email once your account is approved. This process typically takes 1-2 business days." 
+              />
+            </span>
+          </div>
+        </div>
       </AlertDescription>
     </Alert>
   );
