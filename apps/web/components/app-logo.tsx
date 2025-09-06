@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { cn } from '@kit/ui/utils';
+import { Trans } from '@kit/ui/trans';
 
 import appConfig from '~/config/app.config';
 import Logo from './icons/Logo';
@@ -20,11 +21,13 @@ export function AppLogo({
   href,
   label,
   className,
+  showDashboardLabel,
 }: {
   collapsed?: boolean;
   href?: string | null;
   className?: string;
   label?: string;
+  showDashboardLabel?: boolean;
 }) {
   // const { state } = useSidebar();
 
@@ -38,7 +41,11 @@ export function AppLogo({
         <Logo />
         {!collapsed && (
           <p className="text-2xl font-semibold dark:text-white">
-            {appConfig.name}
+            {showDashboardLabel ? (
+              <Trans i18nKey={'common:dashboardTabLabel'} defaults="Dashboard" />
+            ) : (
+              appConfig.name
+            )}
           </p>
         )}
       </div>
