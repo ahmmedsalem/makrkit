@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import type { User } from '@supabase/supabase-js';
 
-import { ChevronsUpDown, User as UserIcon, LogOut } from 'lucide-react';
+import { ChevronsUpDown, LayoutDashboard, LogOut } from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -144,10 +144,10 @@ export function PersonalAccountDropdown({
             className={'s-full flex cursor-pointer items-center space-x-2'}
             href={paths.home}
           >
-            <UserIcon className={'h-5'} />
+            <LayoutDashboard className={'h-5'} />
 
             <span>
-              <Trans i18nKey={'common:profile'} defaults="Profile" />
+              <Trans i18nKey={'common:dashboard'} defaults="Dashboard" />
             </span>
           </Link>
         </DropdownMenuItem>
