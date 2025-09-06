@@ -147,7 +147,7 @@ export function PersonalAccountDropdown({
             <LayoutDashboard className={'h-5'} />
 
             <span>
-              <Trans i18nKey={'common:dashboard'} defaults="Dashboard" />
+              <Trans i18nKey={'common:dashboardTabLabel'} defaults="Dashboard" />
             </span>
           </Link>
         </DropdownMenuItem>
