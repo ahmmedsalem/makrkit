@@ -133,16 +133,14 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
               </Figure>
             </div>
           </CardHeader>
-
-          {/* <CardContent>
-            <Chart data={fees[0]} />
-          </CardContent> */}
         </Card>
       </div>
-      <TradingViewScreener />
+
+      <TradingViewAdvancedChart />
 
       <TradingViewWidget />
 
+      <TradingViewScreener />
 
       {/* Symbol Info Grid */}
       <div
@@ -160,143 +158,15 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
       >
         <TradingViewWidgetSecond />
       </div>
-      <TradingViewAdvancedChart />
-
-      <div>
-        {/* <Card>
-          <CardHeader>
-            <CardTitle>Best Customers</CardTitle>
-            <CardDescription>Showing the top customers by MRR</CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <CustomersTable />
-          </CardContent>
-        </Card> */}
-        {/* <DataTable columns={columns} data={screenerDataResults.quotes} /> */}
-        {/* <ScreenerTableServer /> */}
-      </div>
     </div>
   );
 }
 
-function generateDemoData() {
-  const today = new Date();
-  const formatter = new Intl.DateTimeFormat('en-us', {
-    month: 'long',
-    year: '2-digit',
-  });
-
-  const data: { value: string; name: string }[] = [];
-
-  for (let n = 8; n > 0; n -= 1) {
-    const date = new Date(today.getFullYear(), today.getMonth() - n, 1);
-
-    data.push({
-      name: formatter.format(date),
-      value: (Math.random() * 10).toFixed(1),
-    });
-  }
-
-  const lastValue = data[data.length - 1]?.value;
-
-  return [data, lastValue] as [typeof data, string];
-}
-
-function Chart(
-  props: React.PropsWithChildren<{ data: { value: string; name: string }[] }>,
-) {
-  const chartConfig = {
-    desktop: {
-      label: 'Desktop',
-      color: 'var(--chart-1)',
-    },
-    mobile: {
-      label: 'Mobile',
-      color: 'var(--chart-2)',
-    },
-  } satisfies ChartConfig;
-
-  return (
-    <ChartContainer config={chartConfig}>
-      <LineChart accessibilityLayer data={props.data}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="name"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-        />
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent hideLabel />}
-        />
-        <Line
-          dataKey="value"
-          type="natural"
-          stroke="var(--color-desktop)"
-          strokeWidth={2}
-          dot={false}
-        />
-      </LineChart>
-    </ChartContainer>
-  );
-}
-
-function BadgeWithTrend(props: React.PropsWithChildren<{ trend: string }>) {
-  const className = useMemo(() => {
-    switch (props.trend) {
-      case 'up':
-        return 'text-green-500';
-      case 'down':
-        return 'text-destructive';
-      case 'stale':
-        return 'text-orange-500';
-    }
-  }, [props.trend]);
-
-  return (
-    <Badge
-      variant={'outline'}
-      className={'border-transparent px-1.5 font-normal'}
-    >
-      <span className={className}>{props.children}</span>
-    </Badge>
-  );
-}
 
 function Figure(props: React.PropsWithChildren) {
   return (
     <div className={'font-heading text-2xl font-semibold'}>
       {props.children}
-    </div>
-  );
-}
-
-function Trend(
-  props: React.PropsWithChildren<{
-    trend: 'up' | 'down' | 'stale';
-  }>,
-) {
-  const Icon = useMemo(() => {
-    switch (props.trend) {
-      case 'up':
-        return <ArrowUp className={'h-3 w-3 text-green-500'} />;
-      case 'down':
-        return <ArrowDown className={'text-destructive h-3 w-3'} />;
-      case 'stale':
-        return <Menu className={'h-3 w-3 text-orange-500'} />;
-    }
-  }, [props.trend]);
-
-  return (
-    <div>
-      <BadgeWithTrend trend={props.trend}>
-        <span className={'flex items-center space-x-1'}>
-          {Icon}
-          <span>{props.children}</span>
-        </span>
-      </BadgeWithTrend>
     </div>
   );
 }
