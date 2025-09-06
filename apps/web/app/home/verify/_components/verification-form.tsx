@@ -7,7 +7,7 @@ import type { User } from '@supabase/supabase-js';
 
 import { CheckCircle, Upload, User as UserIcon, Mail, Phone, Camera } from 'lucide-react';
 
-import { usePersonalAccountData } from '@kit/accounts/hooks/use-personal-account-data';
+import { usePersonalAccountData, useRevalidatePersonalAccountDataQuery } from '@kit/accounts/hooks/use-personal-account-data';
 import { Button } from '@kit/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@kit/ui/card';
 import { Input } from '@kit/ui/input';
@@ -26,6 +26,7 @@ export function VerificationForm({ user }: VerificationFormProps) {
   const router = useRouter();
   const supabase = useSupabase();
   const personalAccountData = usePersonalAccountData(user.id);
+  const revalidateAccountData = useRevalidatePersonalAccountDataQuery();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     fullName: user.user_metadata?.name || '',
@@ -118,13 +119,17 @@ export function VerificationForm({ user }: VerificationFormProps) {
         throw updateError;
       }
 
+      // Invalidate the account data cache to trigger immediate UI update
+      revalidateAccountData(user.id);
+
       toast.success(
         <Trans i18nKey="account:verificationSubmissionSuccess" defaults="Verification request submitted successfully! We will review your submission and notify you once approved." />
       );
       
-      // Redirect back to home
-      router.push('/home');
-      router.refresh();
+      // Redirect back to home after a short delay to show the updated status
+      setTimeout(() => {
+        router.push('/home');
+      }, 2000);
     } catch (error) {
       console.error('Verification error:', error);
       toast.error(

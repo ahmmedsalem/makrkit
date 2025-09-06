@@ -2,25 +2,18 @@
 
 import { useMemo, useState } from 'react';
 
-import { ArrowDown, ArrowUp, Menu } from 'lucide-react';
 import {
   Bar,
   BarChart,
-  CartesianGrid,
-  Line,
-  LineChart,
-  XAxis,
+  CartesianGrid, XAxis
 } from 'recharts';
 
 import { usePersonalAccountData } from '@kit/accounts/hooks/use-personal-account-data';
-import { Badge } from '@kit/ui/badge';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  CardDescription, CardHeader,
+  CardTitle
 } from '@kit/ui/card';
 import {
   ChartConfig,
@@ -29,14 +22,6 @@ import {
   ChartTooltipContent,
 } from '@kit/ui/chart';
 import { LoadingOverlay } from '@kit/ui/loading-overlay';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@kit/ui/table';
 import { Trans } from '@kit/ui/trans';
 
 import TradingViewWidget from './trading-view-widget';
@@ -145,7 +130,7 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
       {/* Symbol Info Grid */}
       <div
         className={
-          'grid grid-cols-1 gap-4 md:grid-cols-2 mb-6'
+          'grid grid-cols-1 gap-4 md:grid-cols-2 mb-3'
         }
       >
         <TradingViewSymbolInfo symbol="NASDAQ:AAPL" />
