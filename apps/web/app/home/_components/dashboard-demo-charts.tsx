@@ -29,6 +29,7 @@ import TradingViewWidgetSecond from './trading-view-widget-second';
 import TradingViewScreener from './trading-view-screener';
 import TradingViewAdvancedChart from './trading-view-advanced-chart';
 import TradingViewSymbolInfo from './trading-view-symbol-info';
+import TradingViewTimeline from './trading-view-timeline';
 
 type DashboardDemoChartsProps = {
   userId: string;
@@ -120,6 +121,8 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
           </CardHeader>
         </Card>
       </div>
+
+      <TradingViewTimeline />
 
       <TradingViewAdvancedChart />
 
