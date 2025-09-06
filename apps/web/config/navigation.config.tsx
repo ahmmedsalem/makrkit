@@ -9,7 +9,7 @@ const iconClasses = 'w-4';
 
 const routes = [
   {
-    label: 'common:routes.application',
+    label: 'common:dashboardTabLabel',
     children: [
       {
         label: 'common:routes.home',
