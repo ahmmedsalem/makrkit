@@ -39,7 +39,7 @@ function TradingViewTimeline() {
   }, []);
 
   return (
-    <div className="w-full h-[550px] mb-6">
+    <div className="w-full h-[550px]">
       <div 
         className="tradingview-widget-container w-full h-full" 
         ref={container}

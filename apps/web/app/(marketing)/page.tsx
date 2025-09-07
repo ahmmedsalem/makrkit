@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { LayoutDashboard } from 'lucide-react';
@@ -19,6 +18,8 @@ import { Trans } from '@kit/ui/trans';
 import { DirectionalArrowRight } from '@kit/ui/directional-arrow';
 
 import { useTranslation } from 'react-i18next';
+
+import TradingViewTimeline from './_components/trading-view-timeline';
 
 function Home() {
   const { t } = useTranslation(['marketing']);
@@ -53,16 +54,9 @@ function Home() {
           }
           cta={<MainCallToActionButton />}
           image={
-            <Image
-              priority
-              className={
-                'dark:border-primary/10 rounded-2xl border border-gray-200'
-              }
-              width={3558}
-              height={2222}
-              src={`/images/dashboard.webp`}
-              alt={`App Image`}
-            />
+            <div className="dark:border-primary/10 rounded-2xl border border-gray-200 overflow-hidden">
+              <TradingViewTimeline />
+            </div>
           }
         />
       </div>
