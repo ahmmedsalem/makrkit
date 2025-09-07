@@ -39,11 +39,11 @@ function TradingViewTimeline() {
   }, []);
 
   return (
-    <div className="w-full h-[550px]">
+    <div className="w-full h-[550px] max-w-none">
       <div 
-        className="tradingview-widget-container w-full h-full" 
+        className="tradingview-widget-container w-full h-full max-w-none" 
         ref={container}
-        style={{ minHeight: '550px' }}
+        style={{ minHeight: '550px', width: '100%' }}
       >
         <div className="tradingview-widget-container__widget w-full h-full"></div>
         <div className="tradingview-widget-copyright mt-2">

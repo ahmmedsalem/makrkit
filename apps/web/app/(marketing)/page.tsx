@@ -54,7 +54,7 @@ function Home() {
           }
           cta={<MainCallToActionButton />}
           image={
-            <div className="dark:border-primary/10 rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="w-full dark:border-primary/10 rounded-2xl border border-gray-200 overflow-hidden">
               <TradingViewTimeline />
             </div>
           }
