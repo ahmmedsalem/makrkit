@@ -65,7 +65,7 @@ export function RootProviders({
           <VersionUpdater />
         </If>
 
-        <CrispChatWrapper websiteId="1b7ff945-4db2-4bb2-bc94-0df82c797c9a" />
+        <CrispChatWrapper websiteId="75075d2a-7acc-42c8-96c4-423466f7813f" />
       </I18nProvider>
     </ReactQueryProvider>
   );

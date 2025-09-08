@@ -374,9 +374,13 @@ export default function WithdrawPage() {
         return null;
     };
 
+    if (!user.data) {
+        return null;
+    }
+
     return (
         <PageBody>
-            <RequireActiveAccount user={user.data!}>
+            <RequireActiveAccount user={user.data}>
                 <div className="flex flex-col space-y-8">
                 {/* Page Header */}
                 <div className="mb-6">
