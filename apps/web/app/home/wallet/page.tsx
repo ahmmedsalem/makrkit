@@ -64,6 +64,24 @@ export default function WithdrawPage() {
     const { t } = useTranslation('common');
     const { data: user, isPending: isUserPending, error: userError } = useUser();
     
+    // Early returns BEFORE any other hooks to avoid hook order violations
+    if (isUserPending) {
+        console.log("⏳ User data is pending");
+        return <LoadingOverlay fullPage={false} />;
+    }
+
+    if (!user) {
+        console.log("❌ No user found");
+        toast.error("Please log in to access this page");
+        return null;
+    }
+
+    if (userError) {
+        console.error("❌ User error:", userError);
+        toast.error("Error loading user data");
+        return null;
+    }
+    
     // Calculate last updated time (current time minus 1 hour 43 minutes)
     const getLastUpdatedTime = () => {
         const now = new Date();
@@ -71,9 +89,12 @@ export default function WithdrawPage() {
         now.setMinutes(now.getMinutes() - 43);
         return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
+    
     const createWithdrawal = useCreateWithdrawal();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const ProfileData = usePersonalAccountData(user?.id || '');
+    
+    // Now we know user exists, so we can safely call this hook
+    const ProfileData = usePersonalAccountData(user.id);
 
     const form = useForm<WithdrawalFormData>({
         resolver: zodResolver(WithdrawalSchema),
@@ -93,25 +114,6 @@ export default function WithdrawPage() {
     });
 
     const watchedPaymentMethod = form.watch("paymentMethod");
-
-
-
-    if (isUserPending) {
-        console.log("⏳ User data is pending");
-        return <LoadingOverlay fullPage={false} />;
-    }
-
-    if (!user) {
-        console.log("❌ No user found");
-        toast.error("Please log in to access this page");
-        return null;
-    }
-
-    if (userError) {
-        console.error("❌ User error:", userError);
-        toast.error("Error loading user data");
-        return null;
-    }
 
     const onSubmit = async (data: WithdrawalFormData) => {
         console.log("🚀 Form submit triggered with data:", data);
@@ -374,13 +376,9 @@ export default function WithdrawPage() {
         return null;
     };
 
-    if (!user.data) {
-        return null;
-    }
-
     return (
         <PageBody>
-            <RequireActiveAccount user={user.data}>
+            <RequireActiveAccount user={user}>
                 <div className="flex flex-col space-y-8">
                 {/* Page Header */}
                 <div className="mb-6">
