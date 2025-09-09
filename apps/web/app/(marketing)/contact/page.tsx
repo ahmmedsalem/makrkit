@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { z } from 'zod';
-import { Mail, MapPin, Phone } from 'lucide-react';
 
 import { Button } from '@kit/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@kit/ui/form';
@@ -13,6 +12,7 @@ import { Input } from '@kit/ui/input';
 import { Textarea } from '@kit/ui/textarea';
 import { Trans } from '@kit/ui/trans';
 import { useTranslation } from 'react-i18next';
+import { useContactSubmission } from '@kit/supabase/hooks/use-contact-submission';
 
 import { SitePageHeader } from '../_components/site-page-header';
 
@@ -28,7 +28,7 @@ type ContactFormData = z.infer<typeof ContactSchema>;
 
 export default function ContactPage() {
   const { t } = useTranslation('common');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const contactSubmission = useContactSubmission();
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(ContactSchema),
@@ -41,23 +41,17 @@ export default function ContactPage() {
   });
 
   const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true);
-    
     try {
-      // Here you would typically send the form data to your backend
-      // For now, we'll just simulate a successful submission
       console.log('Contact form data:', data);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await contactSubmission.mutateAsync(data);
       
       toast.success(t('contact.messageSent'));
       form.reset();
     } catch (error) {
       console.error('Error submitting contact form:', error);
-      toast.error(t('contact.messageError'));
-    } finally {
-      setIsSubmitting(false);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(errorMessage || t('contact.messageError'));
     }
   };
 
@@ -68,8 +62,8 @@ export default function ContactPage() {
         subtitle={<Trans i18nKey={'common:contact.subtitle'} />}
       />
 
-      <div className="container mx-auto max-w-6xl px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="container mx-auto max-w-2xl px-4">
+        <div className="w-full">
           {/* Contact Form */}
           <div className="bg-background border rounded-lg p-8">
             <h2 className="text-2xl font-semibold mb-6">
@@ -154,10 +148,10 @@ export default function ContactPage() {
 
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={contactSubmission.isPending}
                   className="w-full"
                 >
-                  {isSubmitting ? (
+                  {contactSubmission.isPending ? (
                     <Trans i18nKey={'common:contact.sending'} />
                   ) : (
                     <Trans i18nKey={'common:contact.sendMessage'} />
@@ -165,84 +159,6 @@ export default function ContactPage() {
                 </Button>
               </form>
             </Form>
-          </div>
-
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-semibold mb-6">
-                <Trans i18nKey={'common:contact.contactInfo'} />
-              </h2>
-              <p className="text-muted-foreground mb-8">
-                <Trans i18nKey={'common:contact.contactDescription'} />
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {/* Email */}
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 rounded-lg p-3">
-                  <Mail className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-medium mb-1">
-                    <Trans i18nKey={'common:contact.emailTitle'} />
-                  </h3>
-                  <p className="text-muted-foreground">info@dragos-capital.net</p>
-                </div>
-              </div>
-
-              {/* Address */}
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 rounded-lg p-3">
-                  <MapPin className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-medium mb-1">
-                    <Trans i18nKey={'common:contact.addressTitle'} />
-                  </h3>
-                  <p className="text-muted-foreground">
-                    <Trans i18nKey={'common:contact.address'} />
-                  </p>
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 rounded-lg p-3">
-                  <Phone className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-medium mb-1">
-                    <Trans i18nKey={'common:contact.phoneTitle'} />
-                  </h3>
-                  <p className="text-muted-foreground">
-                    <Trans i18nKey={'common:contact.phone'} />
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Business Hours */}
-            <div className="bg-muted/50 rounded-lg p-6">
-              <h3 className="font-medium mb-3">
-                <Trans i18nKey={'common:contact.businessHours'} />
-              </h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex justify-between">
-                  <span><Trans i18nKey={'common:contact.mondayFriday'} /></span>
-                  <span>9:00 AM - 6:00 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span><Trans i18nKey={'common:contact.saturday'} /></span>
-                  <span>10:00 AM - 4:00 PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span><Trans i18nKey={'common:contact.sunday'} /></span>
-                  <span><Trans i18nKey={'common:contact.closed'} /></span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
