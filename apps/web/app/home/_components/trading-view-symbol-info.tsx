@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TradingViewSymbolInfoProps {
   symbol: string;
@@ -9,6 +10,10 @@ interface TradingViewSymbolInfoProps {
 function TradingViewSymbolInfo({ symbol }: TradingViewSymbolInfoProps) {
   const container = useRef<HTMLDivElement>(null);
   const scriptLoaded = useRef(false);
+  const { i18n } = useTranslation();
+  
+  // Get the current locale, default to 'en' if not Arabic
+  const currentLocale = i18n.language === 'ar' ? 'ar' : 'en';
 
   useEffect(() => {
     if (!container.current) return;
@@ -17,32 +22,46 @@ function TradingViewSymbolInfo({ symbol }: TradingViewSymbolInfoProps) {
     container.current.innerHTML = '';
     scriptLoaded.current = false;
     
-    const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
-    script.type = "text/javascript";
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      "symbol": symbol,
-      "colorTheme": "dark",
-      "isTransparent": false,
-      "locale": "en",
-      "width": "100%"
+    // Remove any existing TradingView scripts to prevent conflicts
+    const existingScripts = document.querySelectorAll('script[src*="tradingview.com"]');
+    existingScripts.forEach(script => {
+      if (script.src.includes('embed-widget-symbol-info.js')) {
+        script.remove();
+      }
     });
-    
-    container.current.appendChild(script);
-    scriptLoaded.current = true;
+
+    // Small delay to ensure cleanup is complete
+    const timeoutId = setTimeout(() => {
+      if (!container.current) return;
+
+      const script = document.createElement("script");
+      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js";
+      script.type = "text/javascript";
+      script.async = true;
+      script.innerHTML = JSON.stringify({
+        "symbol": symbol,
+        "colorTheme": "dark",
+        "isTransparent": false,
+        "locale": currentLocale,
+        "width": "100%"
+      });
+      
+      container.current.appendChild(script);
+      scriptLoaded.current = true;
+    }, 100);
 
     // Cleanup function
     return () => {
+      clearTimeout(timeoutId);
       scriptLoaded.current = false;
       if (container.current) {
         container.current.innerHTML = '';
       }
     };
-  }, [symbol]); // Re-run when symbol changes
+  }, [symbol, currentLocale]); // Re-run when symbol or locale changes
 
   return (
-    <div className="w-full h-[200px]">
+    <div key={`${symbol}-${currentLocale}`} className="w-full h-[200px]">
       <div 
         className="tradingview-widget-container w-full h-full" 
         ref={container}

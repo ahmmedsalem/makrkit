@@ -1,45 +1,65 @@
 'use client';
 
 import React, { useEffect, useRef, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function TradingViewTimeline() {
   const container = useRef<HTMLDivElement>(null);
   const scriptLoaded = useRef(false);
+  const { i18n } = useTranslation();
+  
+  // Get the current locale, default to 'en' if not Arabic
+  const currentLocale = i18n.language === 'ar' ? 'ar' : 'en';
 
   useEffect(() => {
-    if (!container.current || scriptLoaded.current) return;
+    if (!container.current) return;
 
-    // Clear any existing content
+    // Clear any existing content and reset script loaded flag
     container.current.innerHTML = '';
+    scriptLoaded.current = false;
     
-    const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-timeline.js";
-    script.type = "text/javascript";
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      "displayMode": "regular",
-      "feedMode": "all_symbols",
-      "colorTheme": "dark",
-      "isTransparent": false,
-      "locale": "en",
-      "width": "100%",
-      "height": 550
+    // Remove any existing TradingView scripts to prevent conflicts
+    const existingScripts = document.querySelectorAll('script[src*="tradingview.com"]');
+    existingScripts.forEach(script => {
+      if (script.src.includes('embed-widget-timeline.js')) {
+        script.remove();
+      }
     });
-    
-    container.current.appendChild(script);
-    scriptLoaded.current = true;
+
+    // Small delay to ensure cleanup is complete
+    const timeoutId = setTimeout(() => {
+      if (!container.current) return;
+
+      const script = document.createElement("script");
+      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-timeline.js";
+      script.type = "text/javascript";
+      script.async = true;
+      script.innerHTML = JSON.stringify({
+        "displayMode": "regular",
+        "feedMode": "all_symbols",
+        "colorTheme": "dark",
+        "isTransparent": false,
+        "locale": currentLocale,
+        "width": "100%",
+        "height": 550
+      });
+      
+      container.current.appendChild(script);
+      scriptLoaded.current = true;
+    }, 100);
 
     // Cleanup function
     return () => {
+      clearTimeout(timeoutId);
       scriptLoaded.current = false;
       if (container.current) {
         container.current.innerHTML = '';
       }
     };
-  }, []);
+  }, [currentLocale]); // Re-run when locale changes
 
   return (
-    <div className="w-full h-[550px] max-w-none">
+    <div key={currentLocale} className="w-full h-[550px] max-w-none">
       <div 
         className="tradingview-widget-container w-full h-full max-w-none" 
         ref={container}

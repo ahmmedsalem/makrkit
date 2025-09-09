@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import TradingViewTimeline from './_components/trading-view-timeline';
 
 function Home() {
-  const { t } = useTranslation(['marketing']);
+  const { t, i18n } = useTranslation(['marketing']);
   // const user = usePersonalAccountData('ec9e869c-72b2-4eab-8df0-237492b17945');
 
   // console.log('user', user);
@@ -54,7 +54,7 @@ function Home() {
           }
           cta={<MainCallToActionButton />}
           image={
-            <div className="w-full dark:border-primary/10 rounded-2xl border border-gray-200 overflow-hidden">
+            <div key={i18n.language} className="w-full dark:border-primary/10 rounded-2xl border border-gray-200 overflow-hidden">
               <TradingViewTimeline />
             </div>
           }

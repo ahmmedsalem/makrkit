@@ -23,6 +23,7 @@ import {
 } from '@kit/ui/chart';
 import { LoadingOverlay } from '@kit/ui/loading-overlay';
 import { Trans } from '@kit/ui/trans';
+import { useTranslation } from 'react-i18next';
 
 import TradingViewWidget from './trading-view-widget';
 import TradingViewWidgetSecond from './trading-view-widget-second';
@@ -36,6 +37,7 @@ type DashboardDemoChartsProps = {
 
 export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
   const user = usePersonalAccountData(userId);
+  const { i18n } = useTranslation();
 
   if (!user.data || user.isPending) {
     return <LoadingOverlay fullPage />;
@@ -121,11 +123,11 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
         </Card>
       </div>
 
-      <TradingViewAdvancedChart />
+      <TradingViewAdvancedChart key={`advanced-${i18n.language}`} />
 
-      <TradingViewWidget />
+      <TradingViewWidget key={`crypto-heatmap-${i18n.language}`} />
 
-      <TradingViewScreener />
+      <TradingViewScreener key={`screener-${i18n.language}`} />
 
       {/* Symbol Info Grid */}
       <div
@@ -133,15 +135,15 @@ export default function DashboardDemo({ userId }: DashboardDemoChartsProps) {
           'grid grid-cols-1 gap-4 md:grid-cols-2 mb-3'
         }
       >
-        <TradingViewSymbolInfo symbol="NASDAQ:AAPL" />
-        <TradingViewSymbolInfo symbol="NASDAQ:GOOGL" />
+        <TradingViewSymbolInfo key={`aapl-${i18n.language}`} symbol="NASDAQ:AAPL" />
+        <TradingViewSymbolInfo key={`googl-${i18n.language}`} symbol="NASDAQ:GOOGL" />
       </div>
       <div
         className={
           'mt-6'
         }
       >
-        <TradingViewWidgetSecond />
+        <TradingViewWidgetSecond key={`stock-heatmap-${i18n.language}`} />
       </div>
     </div>
   );

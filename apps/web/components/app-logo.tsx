@@ -1,7 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 
 import { cn } from '@kit/ui/utils';
 import { Trans } from '@kit/ui/trans';
+import { useTranslation } from 'react-i18next';
 
 import appConfig from '~/config/app.config';
 import Logo from './icons/Logo';
@@ -13,7 +16,10 @@ function LogoImage({
   className?: string;
   width?: number;
 }) {
-  return <p>{appConfig.name}</p>;
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === 'ar';
+  
+  return <p>{isArabic ? 'دراجوس كابيتال' : appConfig.name}</p>;
 }
 
 export function AppLogo({
@@ -29,7 +35,8 @@ export function AppLogo({
   label?: string;
   showDashboardLabel?: boolean;
 }) {
-  // const { state } = useSidebar();
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === 'ar';
 
   if (href === null) {
     return <LogoImage className={className} />;
@@ -44,7 +51,7 @@ export function AppLogo({
             {showDashboardLabel ? (
               <Trans i18nKey={'common:dashboardTabLabel'} defaults="Dashboard" />
             ) : (
-              appConfig.name
+              isArabic ? 'دراجوس كابيتال' : appConfig.name
             )}
           </p>
         )}
