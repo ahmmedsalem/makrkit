@@ -9,10 +9,7 @@ import { useTranslation } from 'react-i18next';
 import appConfig from '~/config/app.config';
 import Logo from './icons/Logo';
 
-function LogoImage({
-  className,
-  width = 105,
-}: {
+function LogoImage({}: {
   className?: string;
   width?: number;
 }) {

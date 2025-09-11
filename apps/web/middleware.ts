@@ -8,6 +8,7 @@ import { createMiddlewareClient } from '@kit/supabase/middleware-client';
 
 import appConfig from '~/config/app.config';
 import pathsConfig from '~/config/paths.config';
+import { I18N_COOKIE_NAME } from '~/lib/i18n/i18n.settings';
 
 const CSRF_SECRET_COOKIE = 'csrfSecret';
 const NEXT_ACTION_HEADER = 'next-action';
@@ -28,6 +29,9 @@ export async function middleware(request: NextRequest) {
   // set a unique request ID for each request
   // this helps us log and trace requests
   setRequestId(request);
+
+  // Auto-detect and set language based on user's browser/region
+  await handleLanguageDetection(request, response);
 
   // apply CSRF protection for mutating requests
   const csrfResponse = await withCsrfMiddleware(request, response);
@@ -193,6 +197,88 @@ function matchUrlPattern(url: string) {
     if (patternResult !== null && 'pathname' in patternResult) {
       return pattern.handler;
     }
+  }
+}
+
+/**
+ * Auto-detect user's preferred language based on multiple factors
+ * @param request
+ * @param response
+ */
+async function handleLanguageDetection(request: NextRequest, response: NextResponse) {
+  // Skip if user already has a language preference set
+  const existingLangCookie = request.cookies.get(I18N_COOKIE_NAME);
+  if (existingLangCookie?.value) {
+    return; // User already has a language preference, respect it
+  }
+
+  let detectedLanguage = 'en'; // Default to English
+
+  // Method 1: Browser Language Detection (Most Reliable)
+  const acceptLanguage = request.headers.get('accept-language');
+  if (acceptLanguage) {
+    const browserLanguages = acceptLanguage
+      .split(',')
+      .map(lang => lang.split(';')[0].trim().toLowerCase());
+
+    // Check for Arabic languages
+    const arabicLanguages = [
+      'ar', 'ar-sa', 'ar-eg', 'ar-ae', 'ar-kw', 'ar-qa', 
+      'ar-bh', 'ar-om', 'ar-ye', 'ar-sy', 'ar-jo', 'ar-lb',
+      'ar-iq', 'ar-ly', 'ar-ma', 'ar-tn', 'ar-dz', 'ar-sd'
+    ];
+
+    if (browserLanguages.some(lang => arabicLanguages.includes(lang) || lang.startsWith('ar'))) {
+      detectedLanguage = 'ar';
+    }
+  }
+
+  // Method 2: Timezone-based Detection (Secondary)
+  if (detectedLanguage === 'en') {
+    const timezone = request.headers.get('cf-timezone') || request.headers.get('x-timezone');
+    if (timezone) {
+      // Arabic region timezones
+      const arabicTimezones = [
+        'Asia/Riyadh', 'Asia/Kuwait', 'Asia/Qatar', 'Asia/Bahrain',
+        'Asia/Dubai', 'Asia/Muscat', 'Asia/Baghdad', 'Asia/Damascus',
+        'Asia/Amman', 'Asia/Beirut', 'Africa/Cairo', 'Africa/Tripoli',
+        'Africa/Tunis', 'Africa/Algiers', 'Africa/Casablanca', 'Africa/Khartoum'
+      ];
+
+      if (arabicTimezones.includes(timezone)) {
+        detectedLanguage = 'ar';
+      }
+    }
+  }
+
+  // Method 3: Country-based detection using Cloudflare headers (if available)
+  if (detectedLanguage === 'en') {
+    const country = request.headers.get('cf-ipcountry');
+    if (country) {
+      // Arabic-speaking countries
+      const arabicCountries = [
+        'SA', 'AE', 'KW', 'QA', 'BH', 'OM', 'YE', 'IQ', 
+        'SY', 'JO', 'LB', 'PS', 'EG', 'LY', 'TN', 'DZ', 
+        'MA', 'SD', 'MR', 'DJ', 'SO', 'KM'
+      ];
+
+      if (arabicCountries.includes(country.toUpperCase())) {
+        detectedLanguage = 'ar';
+      }
+    }
+  }
+
+  // Set the detected language cookie
+  if (detectedLanguage === 'ar') {
+    response.cookies.set({
+      name: I18N_COOKIE_NAME,
+      value: detectedLanguage,
+      httpOnly: false, // Allow client-side access for i18n
+      secure: appConfig.production,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      path: '/'
+    });
   }
 }
 
