@@ -126,7 +126,7 @@ function MainCallToActionButton() {
   return (
     <div className={'flex space-x-4'}>
       <CtaButton>
-        <Link href={'/auth/sign-up'}>
+        <Link href={'/auth?tab=signup'}>
           <span className={'flex items-center space-x-0.5'}>
             <span>
               <Trans i18nKey={'common:getStarted'} />

@@ -87,23 +87,15 @@ function AuthButtons() {
         </If>
 
         <Button asChild variant={'ghost'}>
-          <Link href={pathsConfig.auth.signIn}>
-            <Trans i18nKey={'auth:signIn'} />
-          </Link>
-        </Button>
-      </div>
-
-      <div className={'flex space-x-0.5 md:hidden'}>
-        <Button asChild variant={'ghost'}>
-          <Link href={pathsConfig.auth.signIn}>
+          <Link href={`${pathsConfig.auth.signIn.replace('/sign-in', '')}?tab=signin`}>
             <Trans i18nKey={'auth:signIn'} />
           </Link>
         </Button>
       </div>
 
       <Button asChild className="group" variant={'default'}>
-        <Link href={pathsConfig.auth.signUp}>
-          <Trans i18nKey={'auth:signUp'} />
+        <Link href={`${pathsConfig.auth.signUp.replace('/sign-up', '')}?tab=signup`}>
+          <Trans i18nKey={'common:getStarted'} />
         </Link>
       </Button>
     </div>
