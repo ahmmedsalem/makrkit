@@ -206,13 +206,8 @@ function matchUrlPattern(url: string) {
  * @param response
  */
 async function handleLanguageDetection(request: NextRequest, response: NextResponse) {
-  // Skip if user already has a language preference set
-  const existingLangCookie = request.cookies.get(I18N_COOKIE_NAME);
-  if (existingLangCookie?.value) {
-    return; // User already has a language preference, respect it
-  }
-
-  let detectedLanguage = 'ar'; // Default to Arabic
+  // Always start with Arabic as default
+  let detectedLanguage = 'ar';
   let isNonArabicDetected = false;
 
   // Method 1: Browser Language Detection (Most Reliable)
@@ -309,12 +304,12 @@ async function handleLanguageDetection(request: NextRequest, response: NextRespo
     }
   }
 
-  // Set language based on detection (Arabic by default, English for non-Arabic regions)
+  // Only change to English if clearly from non-Arabic region
   if (isNonArabicDetected) {
     detectedLanguage = 'en';
   }
 
-  // Always set the detected language cookie
+  // Always set the language cookie to ensure Arabic is default
   response.cookies.set({
     name: I18N_COOKIE_NAME,
     value: detectedLanguage,
@@ -325,7 +320,7 @@ async function handleLanguageDetection(request: NextRequest, response: NextRespo
     path: '/'
   });
 
-  console.log(`🌍 Language detection: ${detectedLanguage} (Non-Arabic region: ${isNonArabicDetected})`);
+  console.log(`🌍 Language set to: ${detectedLanguage} (Non-Arabic region detected: ${isNonArabicDetected})`);
 }
 
 /**
