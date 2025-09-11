@@ -55,11 +55,13 @@ function SuspendedPersonalAccountDropdown(props: { user: User | null }) {
   if (userData) {
     return (
       <div className={'flex items-center space-x-2'}>
-        <LanguageToggle />
-        
-        <If condition={features.enableThemeToggle}>
-          <ModeToggle />
-        </If>
+        <div className="hidden md:flex items-center space-x-2">
+          <LanguageToggle />
+          
+          <If condition={features.enableThemeToggle}>
+            <ModeToggle />
+          </If>
+        </div>
 
         <PersonalAccountDropdown
           showProfileName={false}
@@ -84,6 +86,14 @@ function AuthButtons() {
           <ModeToggle />
         </If>
 
+        <Button asChild variant={'ghost'}>
+          <Link href={pathsConfig.auth.signIn}>
+            <Trans i18nKey={'auth:signIn'} />
+          </Link>
+        </Button>
+      </div>
+
+      <div className={'flex space-x-0.5 md:hidden'}>
         <Button asChild variant={'ghost'}>
           <Link href={pathsConfig.auth.signIn}>
             <Trans i18nKey={'auth:signIn'} />

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { LogOut, Menu } from 'lucide-react';
 
 import { useSignOut } from '@kit/supabase/hooks/use-sign-out';
+import { useUser } from '@kit/supabase/hooks/use-user';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +16,7 @@ import {
 } from '@kit/ui/dropdown-menu';
 import { Trans } from '@kit/ui/trans';
 
-import { navigationConfig } from '~/config/navigation.config';
+import { useFilteredNavigation } from './use-filtered-navigation';
 
 /**
  * Mobile navigation for the home page
@@ -23,8 +24,12 @@ import { navigationConfig } from '~/config/navigation.config';
  */
 export function HomeMobileNavigation() {
   const signOut = useSignOut();
+  const user = useUser();
+  
+  // Use filtered navigation based on user's account status
+  const filteredNavigation = useFilteredNavigation(user.data?.id || '');
 
-  const Links = navigationConfig.routes.map((item, index) => {
+  const Links = filteredNavigation.routes.map((item, index) => {
     if ('children' in item) {
       return item.children.map((child) => {
         return (

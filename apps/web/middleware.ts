@@ -212,74 +212,120 @@ async function handleLanguageDetection(request: NextRequest, response: NextRespo
     return; // User already has a language preference, respect it
   }
 
-  let detectedLanguage = 'en'; // Default to English
+  let detectedLanguage = 'ar'; // Default to Arabic
+  let isNonArabicDetected = false;
 
   // Method 1: Browser Language Detection (Most Reliable)
   const acceptLanguage = request.headers.get('accept-language');
   if (acceptLanguage) {
     const browserLanguages = acceptLanguage
       .split(',')
-      .map(lang => lang.split(';')[0].trim().toLowerCase());
+      .map(lang => lang?.split(';')[0]?.trim()?.toLowerCase())
+      .filter(Boolean);
 
-    // Check for Arabic languages
-    const arabicLanguages = [
-      'ar', 'ar-sa', 'ar-eg', 'ar-ae', 'ar-kw', 'ar-qa', 
-      'ar-bh', 'ar-om', 'ar-ye', 'ar-sy', 'ar-jo', 'ar-lb',
-      'ar-iq', 'ar-ly', 'ar-ma', 'ar-tn', 'ar-dz', 'ar-sd'
+    // Check for non-Arabic languages (major languages that indicate non-Arabic speakers)
+    const nonArabicLanguages = [
+      'en', 'en-us', 'en-gb', 'en-ca', 'en-au',
+      'es', 'es-es', 'es-mx', 'es-ar',
+      'fr', 'fr-fr', 'fr-ca',
+      'de', 'de-de', 'de-at', 'de-ch',
+      'it', 'it-it',
+      'pt', 'pt-br', 'pt-pt',
+      'ru', 'ru-ru',
+      'zh', 'zh-cn', 'zh-tw',
+      'ja', 'ja-jp',
+      'ko', 'ko-kr',
+      'hi', 'hi-in',
+      'ur', 'ur-pk',
+      'fa', 'fa-ir',
+      'tr', 'tr-tr',
+      'nl', 'nl-nl',
+      'sv', 'sv-se',
+      'no', 'nb-no',
+      'da', 'da-dk',
+      'fi', 'fi-fi',
+      'pl', 'pl-pl'
     ];
 
-    if (browserLanguages.some(lang => arabicLanguages.includes(lang) || lang.startsWith('ar'))) {
-      detectedLanguage = 'ar';
+    // Check if the primary language is non-Arabic
+    const primaryLanguage = browserLanguages[0];
+    if (primaryLanguage && (nonArabicLanguages.includes(primaryLanguage) || 
+        nonArabicLanguages.some(lang => {
+          const langPrefix = lang.split('-')[0];
+          return langPrefix ? primaryLanguage.startsWith(langPrefix) : false;
+        }))) {
+      isNonArabicDetected = true;
     }
   }
 
   // Method 2: Timezone-based Detection (Secondary)
-  if (detectedLanguage === 'en') {
+  if (!isNonArabicDetected) {
     const timezone = request.headers.get('cf-timezone') || request.headers.get('x-timezone');
     if (timezone) {
-      // Arabic region timezones
-      const arabicTimezones = [
-        'Asia/Riyadh', 'Asia/Kuwait', 'Asia/Qatar', 'Asia/Bahrain',
-        'Asia/Dubai', 'Asia/Muscat', 'Asia/Baghdad', 'Asia/Damascus',
-        'Asia/Amman', 'Asia/Beirut', 'Africa/Cairo', 'Africa/Tripoli',
-        'Africa/Tunis', 'Africa/Algiers', 'Africa/Casablanca', 'Africa/Khartoum'
+      // Major non-Arabic region timezones
+      const nonArabicTimezones = [
+        // Americas
+        'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
+        'America/Toronto', 'America/Vancouver', 'America/Mexico_City', 'America/Sao_Paulo',
+        // Europe
+        'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Rome', 'Europe/Madrid',
+        'Europe/Amsterdam', 'Europe/Stockholm', 'Europe/Moscow',
+        // Asia (Non-Arabic)
+        'Asia/Tokyo', 'Asia/Seoul', 'Asia/Shanghai', 'Asia/Hong_Kong', 'Asia/Singapore',
+        'Asia/Bangkok', 'Asia/Jakarta', 'Asia/Manila', 'Asia/Kolkata', 'Asia/Karachi',
+        // Others
+        'Australia/Sydney', 'Australia/Melbourne', 'Pacific/Auckland'
       ];
 
-      if (arabicTimezones.includes(timezone)) {
-        detectedLanguage = 'ar';
+      if (nonArabicTimezones.includes(timezone)) {
+        isNonArabicDetected = true;
       }
     }
   }
 
   // Method 3: Country-based detection using Cloudflare headers (if available)
-  if (detectedLanguage === 'en') {
+  if (!isNonArabicDetected) {
     const country = request.headers.get('cf-ipcountry');
     if (country) {
-      // Arabic-speaking countries
-      const arabicCountries = [
-        'SA', 'AE', 'KW', 'QA', 'BH', 'OM', 'YE', 'IQ', 
-        'SY', 'JO', 'LB', 'PS', 'EG', 'LY', 'TN', 'DZ', 
-        'MA', 'SD', 'MR', 'DJ', 'SO', 'KM'
+      // Major non-Arabic speaking countries
+      const nonArabicCountries = [
+        // Americas
+        'US', 'CA', 'MX', 'BR', 'AR', 'CL', 'CO',
+        // Europe
+        'GB', 'FR', 'DE', 'IT', 'ES', 'NL', 'BE', 'CH', 'AT', 'SE', 'NO', 'DK',
+        'PL', 'CZ', 'RU', 'UA',
+        // Asia (Non-Arabic)
+        'CN', 'JP', 'KR', 'IN', 'ID', 'TH', 'VN', 'PH', 'MY', 'SG', 'BD', 'PK',
+        'TR', 'IR',
+        // Africa (Non-Arabic)
+        'ZA', 'NG', 'KE', 'GH', 'ET',
+        // Oceania
+        'AU', 'NZ'
       ];
 
-      if (arabicCountries.includes(country.toUpperCase())) {
-        detectedLanguage = 'ar';
+      if (nonArabicCountries.includes(country.toUpperCase())) {
+        isNonArabicDetected = true;
       }
     }
   }
 
-  // Set the detected language cookie
-  if (detectedLanguage === 'ar') {
-    response.cookies.set({
-      name: I18N_COOKIE_NAME,
-      value: detectedLanguage,
-      httpOnly: false, // Allow client-side access for i18n
-      secure: appConfig.production,
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 365, // 1 year
-      path: '/'
-    });
+  // Set language based on detection (Arabic by default, English for non-Arabic regions)
+  if (isNonArabicDetected) {
+    detectedLanguage = 'en';
   }
+
+  // Always set the detected language cookie
+  response.cookies.set({
+    name: I18N_COOKIE_NAME,
+    value: detectedLanguage,
+    httpOnly: false, // Allow client-side access for i18n
+    secure: appConfig.production,
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 365, // 1 year
+    path: '/'
+  });
+
+  console.log(`🌍 Language detection: ${detectedLanguage} (Non-Arabic region: ${isNonArabicDetected})`);
 }
 
 /**

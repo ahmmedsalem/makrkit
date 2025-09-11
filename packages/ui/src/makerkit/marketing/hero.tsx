@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { cn } from '../../lib/utils';
 import { HeroTitle } from './hero-title';
@@ -22,6 +25,8 @@ export function Hero({
   className,
   animate = true,
 }: HeroProps) {
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === 'ar';
   return (
     <div className={cn('mx-auto flex flex-col space-y-20', className)}>
       <div
@@ -52,7 +57,7 @@ export function Hero({
 
             {subtitle && (
               <div className="flex max-w-lg">
-                <h3 className="text-muted-foreground p-0 text-center font-sans text-2xl font-normal tracking-tight">
+                <h3 className={cn("text-muted-foreground p-0 text-center text-base sm:text-xl font-normal tracking-tight", isArabic ? 'font-arabic' : 'font-sans')}>
                   {subtitle}
                 </h3>
               </div>

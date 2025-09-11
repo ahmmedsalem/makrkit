@@ -44,7 +44,7 @@ export function AppLogo({
       <div className="flex items-center gap-2.5">
         <Logo />
         {!collapsed && (
-          <p className="text-2xl font-semibold dark:text-white">
+          <p className="text-sm md:text-2xl font-semibold dark:text-white whitespace-nowrap">
             {showDashboardLabel ? (
               <Trans i18nKey={'common:dashboardTabLabel'} defaults="Dashboard" />
             ) : (
