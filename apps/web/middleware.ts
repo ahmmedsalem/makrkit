@@ -30,8 +30,8 @@ export async function middleware(request: NextRequest) {
   // this helps us log and trace requests
   setRequestId(request);
 
-  // Auto-detect and set language based on user's browser/region
-  await handleLanguageDetection(request, response);
+  // Set default language to Arabic if no cookie exists
+  await setDefaultLanguage(request, response);
 
   // apply CSRF protection for mutating requests
   const csrfResponse = await withCsrfMiddleware(request, response);
@@ -201,126 +201,28 @@ function matchUrlPattern(url: string) {
 }
 
 /**
- * Auto-detect user's preferred language based on multiple factors
+ * Set default language to Arabic if no cookie exists
  * @param request
  * @param response
  */
-async function handleLanguageDetection(request: NextRequest, response: NextResponse) {
-  // Always start with Arabic as default
-  let detectedLanguage = 'ar';
-  let isNonArabicDetected = false;
-
-  // Method 1: Browser Language Detection (Most Reliable)
-  const acceptLanguage = request.headers.get('accept-language');
-  if (acceptLanguage) {
-    const browserLanguages = acceptLanguage
-      .split(',')
-      .map(lang => lang?.split(';')[0]?.trim()?.toLowerCase())
-      .filter(Boolean);
-
-    // Check for non-Arabic languages (major languages that indicate non-Arabic speakers)
-    const nonArabicLanguages = [
-      'en', 'en-us', 'en-gb', 'en-ca', 'en-au',
-      'es', 'es-es', 'es-mx', 'es-ar',
-      'fr', 'fr-fr', 'fr-ca',
-      'de', 'de-de', 'de-at', 'de-ch',
-      'it', 'it-it',
-      'pt', 'pt-br', 'pt-pt',
-      'ru', 'ru-ru',
-      'zh', 'zh-cn', 'zh-tw',
-      'ja', 'ja-jp',
-      'ko', 'ko-kr',
-      'hi', 'hi-in',
-      'ur', 'ur-pk',
-      'fa', 'fa-ir',
-      'tr', 'tr-tr',
-      'nl', 'nl-nl',
-      'sv', 'sv-se',
-      'no', 'nb-no',
-      'da', 'da-dk',
-      'fi', 'fi-fi',
-      'pl', 'pl-pl'
-    ];
-
-    // Check if the primary language is non-Arabic
-    const primaryLanguage = browserLanguages[0];
-    if (primaryLanguage && (nonArabicLanguages.includes(primaryLanguage) || 
-        nonArabicLanguages.some(lang => {
-          const langPrefix = lang.split('-')[0];
-          return langPrefix ? primaryLanguage.startsWith(langPrefix) : false;
-        }))) {
-      isNonArabicDetected = true;
-    }
+async function setDefaultLanguage(request: NextRequest, response: NextResponse) {
+  // Check if user already has a language cookie
+  const existingLangCookie = request.cookies.get(I18N_COOKIE_NAME);
+  
+  // Only set default if no cookie exists
+  if (!existingLangCookie?.value) {
+    response.cookies.set({
+      name: I18N_COOKIE_NAME,
+      value: 'ar', // Always default to Arabic
+      httpOnly: false,
+      secure: appConfig.production,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      path: '/'
+    });
+    
+    console.log('🌍 Default language set to Arabic');
   }
-
-  // Method 2: Timezone-based Detection (Secondary)
-  if (!isNonArabicDetected) {
-    const timezone = request.headers.get('cf-timezone') || request.headers.get('x-timezone');
-    if (timezone) {
-      // Major non-Arabic region timezones
-      const nonArabicTimezones = [
-        // Americas
-        'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
-        'America/Toronto', 'America/Vancouver', 'America/Mexico_City', 'America/Sao_Paulo',
-        // Europe
-        'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Rome', 'Europe/Madrid',
-        'Europe/Amsterdam', 'Europe/Stockholm', 'Europe/Moscow',
-        // Asia (Non-Arabic)
-        'Asia/Tokyo', 'Asia/Seoul', 'Asia/Shanghai', 'Asia/Hong_Kong', 'Asia/Singapore',
-        'Asia/Bangkok', 'Asia/Jakarta', 'Asia/Manila', 'Asia/Kolkata', 'Asia/Karachi',
-        // Others
-        'Australia/Sydney', 'Australia/Melbourne', 'Pacific/Auckland'
-      ];
-
-      if (nonArabicTimezones.includes(timezone)) {
-        isNonArabicDetected = true;
-      }
-    }
-  }
-
-  // Method 3: Country-based detection using Cloudflare headers (if available)
-  if (!isNonArabicDetected) {
-    const country = request.headers.get('cf-ipcountry');
-    if (country) {
-      // Major non-Arabic speaking countries
-      const nonArabicCountries = [
-        // Americas
-        'US', 'CA', 'MX', 'BR', 'AR', 'CL', 'CO',
-        // Europe
-        'GB', 'FR', 'DE', 'IT', 'ES', 'NL', 'BE', 'CH', 'AT', 'SE', 'NO', 'DK',
-        'PL', 'CZ', 'RU', 'UA',
-        // Asia (Non-Arabic)
-        'CN', 'JP', 'KR', 'IN', 'ID', 'TH', 'VN', 'PH', 'MY', 'SG', 'BD', 'PK',
-        'TR', 'IR',
-        // Africa (Non-Arabic)
-        'ZA', 'NG', 'KE', 'GH', 'ET',
-        // Oceania
-        'AU', 'NZ'
-      ];
-
-      if (nonArabicCountries.includes(country.toUpperCase())) {
-        isNonArabicDetected = true;
-      }
-    }
-  }
-
-  // Only change to English if clearly from non-Arabic region
-  if (isNonArabicDetected) {
-    detectedLanguage = 'en';
-  }
-
-  // Always set the language cookie to ensure Arabic is default
-  response.cookies.set({
-    name: I18N_COOKIE_NAME,
-    value: detectedLanguage,
-    httpOnly: false, // Allow client-side access for i18n
-    secure: appConfig.production,
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 365, // 1 year
-    path: '/'
-  });
-
-  console.log(`🌍 Language set to: ${detectedLanguage} (Non-Arabic region detected: ${isNonArabicDetected})`);
 }
 
 /**

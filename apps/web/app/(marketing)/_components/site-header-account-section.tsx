@@ -93,7 +93,7 @@ function AuthButtons() {
         </Button>
       </div>
 
-      <Button asChild className="group" variant={'default'}>
+      <Button asChild className="group text-sm px-3 py-2 h-9" variant={'default'}>
         <Link href={`${pathsConfig.auth.signUp.replace('/sign-up', '')}?tab=signup`}>
           <Trans i18nKey={'common:getStarted'} />
         </Link>

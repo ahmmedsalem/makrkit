@@ -36,26 +36,11 @@ async function createInstance() {
 
   let selectedLanguage: string | undefined = undefined;
 
-  // Priority 1: If language priority is 'application', always start with Arabic as default
-  if (priority === 'application') {
-    selectedLanguage = 'ar'; // Always start with Arabic for application priority
-  }
-
-  // Priority 2: If we have a cookie and it's different from default, use it
-  if (cookie && priority === 'application') {
-    // Only override Arabic default if cookie explicitly has a different language
-    // This allows the middleware to set the language properly
+  // Use cookie value if it exists, otherwise default to Arabic
+  if (cookie) {
     selectedLanguage = getLanguageOrFallback(cookie);
-  } else if (cookie && priority === 'user') {
-    // For user priority, always respect the cookie
-    selectedLanguage = getLanguageOrFallback(cookie);
-  }
-
-  // Priority 3: If no cookie and priority is user, check browser language  
-  if (!selectedLanguage && priority === 'user') {
-    const userPreferredLanguage = await getPreferredLanguageFromBrowser();
-
-    selectedLanguage = getLanguageOrFallback(userPreferredLanguage);
+  } else {
+    selectedLanguage = 'ar'; // Default to Arabic
   }
 
   const settings = getI18nSettings(selectedLanguage);

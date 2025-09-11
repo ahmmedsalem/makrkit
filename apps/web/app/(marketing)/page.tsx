@@ -28,7 +28,7 @@ function Home() {
   // console.log('user', user);
   return (
     <div className={'mt-4 flex flex-col space-y-24 py-14'}>
-      <div className={'container mx-auto'}>
+      <div className={'px-4 md:container md:mx-auto'}>
         <Hero
           pill={
             <Pill label={t('heroTagNew')}>

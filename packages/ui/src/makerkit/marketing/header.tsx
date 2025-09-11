@@ -21,11 +21,11 @@ export const Header: React.FC<HeaderProps> = function ({
       )}
       {...props}
     >
-      <div className="container">
-        <div className="grid h-14 grid-cols-3 items-center">
-          <div className="flex justify-center md:justify-start col-start-2 md:col-start-1">{logo}</div>
-          <div className="order-first md:order-none col-start-1 md:col-start-2">{navigation}</div>
-          <div className="flex items-center justify-end gap-x-2 col-start-3">{actions}</div>
+      <div className="px-4 md:container md:mx-auto">
+        <div className="grid h-14 grid-cols-[1fr_auto_1fr] md:grid-cols-3 items-center">
+          <div className="md:order-first order-1">{navigation}</div>
+          <div className="flex justify-center order-2">{logo}</div>
+          <div className="flex items-center justify-end gap-x-2 order-3">{actions}</div>
         </div>
       </div>
     </div>
