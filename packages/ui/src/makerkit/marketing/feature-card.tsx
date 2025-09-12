@@ -6,16 +6,19 @@ import { CardDescription, CardHeader, CardTitle } from '../../shadcn/card';
 interface FeatureCardProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   description: string;
+  children?: React.ReactNode;
 }
 
 export const FeatureCard: React.FC<FeatureCardProps> = ({
   className,
   label,
   description,
+  children,
   ...props
 }) => {
   return (
     <div className={cn('rounded-xl border p-4', className)} {...props}>
+      {children}
       <CardHeader>
         <CardTitle className="text-xl font-medium">{label}</CardTitle>
 

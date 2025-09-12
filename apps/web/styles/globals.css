@@ -39,6 +39,14 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  
+  .dark body {
+    background-color: #000000 !important;
+  }
+  
+  .dark html {
+    background-color: #000000 !important;
+  }
 
   *,
   ::after,
@@ -46,6 +54,61 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--border, currentColor);
+  }
+
+  /* Portfolio Hero Styles */
+  .hero-bg {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .dark .hero-bg {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  }
+
+  .dark .gradient-text {
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Portfolio Black Background with Light Blue Glow */
+  .dark .portfolio-bg {
+    background: #000000 url('/images/grid-bg.svg');
+    background-repeat: repeat;
+    background-position: top center;
+    background-size: auto;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .portfolio-bg {
+    position: relative;
+    overflow: hidden;
+    background-image: url('/images/grid-bg.svg');
+    background-repeat: repeat;
+    background-position: top center;
+    background-size: auto;
+  }
+
+  .portfolio-bg::before {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
   }
 
   input::placeholder,
