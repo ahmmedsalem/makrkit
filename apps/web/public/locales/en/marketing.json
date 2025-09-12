@@ -193,5 +193,32 @@
   "cookieSection5Safari": "Safari",
   "cookieSection5Edge": "Microsoft Edge",
   "cookieSection6Title": "6. Updates to This Policy",
-  "cookieSection6Content": "We may update this Cookie Policy from time to time. Any changes will be posted on our website, and continued use of our services indicates acceptance of the updated policy."
+  "cookieSection6Content": "We may update this Cookie Policy from time to time. Any changes will be posted on our website, and continued use of our services indicates acceptance of the updated policy.",
+  "testimonials": {
+    "title": "What Our Traders Say",
+    "review1": {
+      "title": "Amazing Results!",
+      "content": "Been using Dragos Capital for 8 months. The AI really works - getting steady 9% monthly returns. Platform is easy to use.",
+      "author": "Ahmed Moustafa",
+      "position": "Professional Trader"
+    },
+    "review2": {
+      "title": "Very Professional Service",
+      "content": "Great platform with excellent customer support. The AI strategies are well-researched and profitable. Highly recommend for serious traders.",
+      "author": "Omar Al-Rashid",
+      "position": "Crypto Investor"
+    },
+    "review3": {
+      "title": "Simple and Effective",
+      "content": "Love how easy it is to track my investments. The AI does all the complex work while I monitor performance. Much better than traditional trading.",
+      "author": "Khalid Al-Zahra",
+      "position": "Day Trader"
+    },
+    "review4": {
+      "title": "Consistent Profits",
+      "content": "The market insights are really helpful. I understand trends better now and the AI system delivers consistent profits every month.",
+      "author": "Hassan Al-Mahmoud",
+      "position": "Investment Advisor"
+    }
+  }
 }
