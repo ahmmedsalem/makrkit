@@ -23,6 +23,7 @@
   "updatePhoneNumberLoading": "Updating phone number...",
   "updatePhoneNumberSubmitLabel": "Update Phone Number",
   "emailLabel": "Email Address",
+  "email": "Email",
   "accountImage": "Your Profile Picture",
   "accountImageDescription": "Please choose a photo to upload as your profile picture.",
   "profilePictureHeading": "Upload a Profile Picture",
@@ -141,5 +142,11 @@
   "verificationSubmissionError": "Failed to submit verification request. Please try again.",
   "personalPhotoRequired": "Please upload a personal photo",
   "idDocumentRequired": "Please upload a government ID document",
-  "filesRequired": "Please upload both personal photo and government ID document."
+  "filesRequired": "Please upload both personal photo and government ID document.",
+  "fullNameRequired": "Please enter your full name.",
+  "phoneNumberRequired": "Please enter your phone number.",
+  "choosePersonalPhoto": "Choose personal photo",
+  "chooseIdDocument": "Choose ID document",
+  "noPersonalPhotoSelected": "No personal photo selected",
+  "noIdDocumentSelected": "No ID document selected"
 }

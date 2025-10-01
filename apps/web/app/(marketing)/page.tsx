@@ -241,23 +241,20 @@ function Home() {
         </div>
       </motion.section>
 
-      {/* Reviews Section */}
-      <motion.section 
+      {/* Reviews Section - Hidden */}
+      {/* <motion.section 
         className="py-16 px-4 sm:px-6 lg:px-8"
         variants={VARIANTS_SECTION}
         transition={TRANSITION_SECTION}
       >
         <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl mb-4">
               <Trans i18nKey="marketing:testimonials.title" />
             </h2>
           </div>
 
-          {/* Reviews Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {/* Review 1 */}
             <div className="relative overflow-hidden rounded-xl bg-zinc-300/30 dark:bg-zinc-600/30 p-[1px]">
               <Spotlight
                 className="from-yellow-600 via-yellow-500 to-amber-400 blur-2xl"
@@ -289,7 +286,6 @@ function Home() {
               </div>
             </div>
 
-            {/* Review 2 */}
             <div className="relative overflow-hidden rounded-xl bg-zinc-300/30 dark:bg-zinc-600/30 p-[1px]">
               <Spotlight
                 className="from-green-600 via-green-500 to-emerald-400 blur-2xl"
@@ -321,7 +317,6 @@ function Home() {
               </div>
             </div>
 
-            {/* Review 3 */}
             <div className="relative overflow-hidden rounded-xl bg-zinc-300/30 dark:bg-zinc-600/30 p-[1px]">
               <Spotlight
                 className="from-orange-600 via-orange-500 to-red-400 blur-2xl"
@@ -353,7 +348,6 @@ function Home() {
               </div>
             </div>
 
-            {/* Review 4 */}
             <div className="relative overflow-hidden rounded-xl bg-zinc-300/30 dark:bg-zinc-600/30 p-[1px]">
               <Spotlight
                 className="from-purple-600 via-purple-500 to-pink-400 blur-2xl"
@@ -386,7 +380,7 @@ function Home() {
             </div>
           </div>
         </div>
-      </motion.section>
+      </motion.section> */}
     </div>
   );
 }

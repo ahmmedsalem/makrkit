@@ -7,7 +7,7 @@ CREATE TYPE account_status AS ENUM ('active', 'inactive', 'pending');
 
 -- Add status column to accounts table
 ALTER TABLE public.accounts 
-ADD COLUMN status account_status NOT NULL DEFAULT 'pending';
+ADD COLUMN status account_status NOT NULL DEFAULT 'inactive';
 
 -- Add comment for the new column
 COMMENT ON COLUMN public.accounts.status IS 'The status of the account - pending (requires verification), active, or inactive';

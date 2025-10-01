@@ -17,6 +17,7 @@ import { Alert, AlertDescription } from '@kit/ui/alert';
 import { Trans } from '@kit/ui/trans';
 import { useSupabase } from '@kit/supabase/hooks/use-supabase';
 import { toast } from '@kit/ui/sonner';
+import { useTranslation } from 'react-i18next';
 
 export interface VerificationFormProps {
   user: User;
@@ -25,6 +26,7 @@ export interface VerificationFormProps {
 export function VerificationForm({ user }: VerificationFormProps) {
   const router = useRouter();
   const supabase = useSupabase();
+  const { t, i18n } = useTranslation(['account']);
   const personalAccountData = usePersonalAccountData(user.id);
   const revalidateAccountData = useRevalidatePersonalAccountDataQuery();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,12 +36,25 @@ export function VerificationForm({ user }: VerificationFormProps) {
     idDocument: null as File | null,
     personalPhoto: null as File | null,
   });
+  const [errors, setErrors] = useState({
+    fullName: '',
+    phoneNumber: '',
+    personalPhoto: '',
+    idDocument: '',
+  });
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+    // Clear error when user starts typing
+    if (errors[field as keyof typeof errors]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }));
+    }
   };
 
   const handleFileChange = (field: 'idDocument' | 'personalPhoto', e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +64,13 @@ export function VerificationForm({ user }: VerificationFormProps) {
         ...prev,
         [field]: file
       }));
+      // Clear error when file is selected
+      if (errors[field]) {
+        setErrors(prev => ({
+          ...prev,
+          [field]: ''
+        }));
+      }
     }
   };
 
@@ -75,11 +97,45 @@ export function VerificationForm({ user }: VerificationFormProps) {
     setIsSubmitting(true);
 
     try {
-      // Validate required files
-      if (!formData.personalPhoto || !formData.idDocument) {
-        toast.error(
-          <Trans i18nKey="account:filesRequired" defaults="Please upload both personal photo and government ID document." />
-        );
+      // Clear previous errors
+      setErrors({
+        fullName: '',
+        phoneNumber: '',
+        personalPhoto: '',
+        idDocument: '',
+      });
+
+      let hasErrors = false;
+      const newErrors = {
+        fullName: '',
+        phoneNumber: '',
+        personalPhoto: '',
+        idDocument: '',
+      };
+
+      // Validate all required fields
+      if (!formData.fullName.trim()) {
+        newErrors.fullName = 'fullNameRequired';
+        hasErrors = true;
+      }
+
+      if (!formData.phoneNumber.trim()) {
+        newErrors.phoneNumber = 'phoneNumberRequired';
+        hasErrors = true;
+      }
+
+      if (!formData.personalPhoto) {
+        newErrors.personalPhoto = 'personalPhotoRequired';
+        hasErrors = true;
+      }
+
+      if (!formData.idDocument) {
+        newErrors.idDocument = 'idDocumentRequired';
+        hasErrors = true;
+      }
+
+      if (hasErrors) {
+        setErrors(newErrors);
         return;
       }
 
@@ -161,7 +217,7 @@ export function VerificationForm({ user }: VerificationFormProps) {
           <div className="space-y-2">
             <Label htmlFor="email" className="flex items-center gap-2">
               <Mail className="h-4 w-4" />
-              <Trans i18nKey="common:email" defaults="Email" />
+              <Trans i18nKey="account:email" defaults="Email" />
             </Label>
             <Input
               id="email"
@@ -185,9 +241,14 @@ export function VerificationForm({ user }: VerificationFormProps) {
               type="text"
               value={formData.fullName}
               onChange={(e) => handleInputChange('fullName', e.target.value)}
-              required
-              placeholder="Enter your full legal name"
+              placeholder={t('fullNamePlaceholder')}
+              className={errors.fullName ? "border-destructive" : ""}
             />
+            {errors.fullName && (
+              <p className="text-sm text-destructive">
+                <Trans i18nKey={`account:${errors.fullName}`} />
+              </p>
+            )}
           </div>
 
           {/* Phone Number */}
@@ -196,15 +257,19 @@ export function VerificationForm({ user }: VerificationFormProps) {
               <Phone className="h-4 w-4" />
               <Trans i18nKey="account:phoneNumber" defaults="Phone Number" /> <span className="text-destructive">*</span>
             </Label>
-            <PhoneInput
-              value={formData.phoneNumber}
-              onChange={(value) => handleInputChange('phoneNumber', value)}
-              placeholder="50 123 4567"
-              defaultCountryCode="+971"
-            />
-            <p className="text-sm text-muted-foreground">
-              <Trans i18nKey="account:phoneNumberHelp" defaults="Your phone number for verification purposes" />
-            </p>
+            <div className={i18n.language === 'ar' ? '[&_input]:text-right [&_input]:dir-rtl' : ''}>
+              <PhoneInput
+                value={formData.phoneNumber}
+                onChange={(value) => handleInputChange('phoneNumber', value)}
+                placeholder={t('phoneNumberPlaceholder')}
+                defaultCountryCode="+971"
+              />
+            </div>
+            {errors.phoneNumber && (
+              <p className="text-sm text-destructive">
+                <Trans i18nKey={`account:${errors.phoneNumber}`} />
+              </p>
+            )}
           </div>
 
           {/* Personal Photo Upload */}
@@ -213,20 +278,42 @@ export function VerificationForm({ user }: VerificationFormProps) {
               <Camera className="h-4 w-4" />
               <Trans i18nKey="account:personalPhoto" defaults="Personal Photo" /> <span className="text-destructive">*</span>
             </Label>
-            <Input
-              id="personalPhoto"
-              type="file"
-              onChange={(e) => handleFileChange('personalPhoto', e)}
-              accept="image/*"
-              required
-              className="file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-            />
-            <p className="text-sm text-muted-foreground">
-              <Trans 
-                i18nKey="account:personalPhotoHelp" 
-                defaults="Upload a clear photo of yourself to verify identity matches the government ID" 
+            <div className={`relative ${errors.personalPhoto ? "border border-destructive rounded-md" : ""}`}>
+              <Input
+                id="personalPhoto"
+                type="file"
+                onChange={(e) => handleFileChange('personalPhoto', e)}
+                accept="image/*"
+                className="sr-only"
               />
-            </p>
+              <Label
+                htmlFor="personalPhoto"
+                className={`flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-md cursor-pointer hover:bg-muted/50 transition-colors ${errors.personalPhoto ? "border-destructive" : "border-muted-foreground/25"}`}
+              >
+                <Upload className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm">
+                  {formData.personalPhoto ? (
+                    <span className="text-foreground">{formData.personalPhoto.name}</span>
+                  ) : (
+                    <span className="text-muted-foreground">
+                      <Trans i18nKey="account:choosePersonalPhoto" />
+                    </span>
+                  )}
+                </span>
+              </Label>
+            </div>
+            {errors.personalPhoto ? (
+              <p className="text-sm text-destructive">
+                <Trans i18nKey={`account:${errors.personalPhoto}`} />
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                <Trans 
+                  i18nKey="account:personalPhotoHelp" 
+                  defaults="Upload a clear photo of yourself to verify identity matches the government ID" 
+                />
+              </p>
+            )}
           </div>
 
           {/* ID Document Upload */}
@@ -235,20 +322,42 @@ export function VerificationForm({ user }: VerificationFormProps) {
               <Upload className="h-4 w-4" />
               <Trans i18nKey="account:idDocument" defaults="Government ID Document" /> <span className="text-destructive">*</span>
             </Label>
-            <Input
-              id="idDocument"
-              type="file"
-              onChange={(e) => handleFileChange('idDocument', e)}
-              accept="image/*,.pdf"
-              required
-              className="file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-            />
-            <p className="text-sm text-muted-foreground">
-              <Trans 
-                i18nKey="account:idDocumentHelp" 
-                defaults="Please upload a clear photo of your government-issued ID (passport, driver's license, etc.)" 
+            <div className={`relative ${errors.idDocument ? "border border-destructive rounded-md" : ""}`}>
+              <Input
+                id="idDocument"
+                type="file"
+                onChange={(e) => handleFileChange('idDocument', e)}
+                accept="image/*,.pdf"
+                className="sr-only"
               />
-            </p>
+              <Label
+                htmlFor="idDocument"
+                className={`flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-md cursor-pointer hover:bg-muted/50 transition-colors ${errors.idDocument ? "border-destructive" : "border-muted-foreground/25"}`}
+              >
+                <Upload className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm">
+                  {formData.idDocument ? (
+                    <span className="text-foreground">{formData.idDocument.name}</span>
+                  ) : (
+                    <span className="text-muted-foreground">
+                      <Trans i18nKey="account:chooseIdDocument" />
+                    </span>
+                  )}
+                </span>
+              </Label>
+            </div>
+            {errors.idDocument ? (
+              <p className="text-sm text-destructive">
+                <Trans i18nKey={`account:${errors.idDocument}`} />
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                <Trans 
+                  i18nKey="account:idDocumentHelp" 
+                  defaults="Please upload a clear photo of your government-issued ID (passport, driver's license, etc.)" 
+                />
+              </p>
+            )}
           </div>
 
           {/* Info Alert */}
