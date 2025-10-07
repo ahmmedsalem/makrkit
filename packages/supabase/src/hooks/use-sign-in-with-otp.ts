@@ -3,6 +3,7 @@ import type { SignInWithPasswordlessCredentials } from '@supabase/supabase-js';
 import { useMutation } from '@tanstack/react-query';
 
 import { useSupabase } from './use-supabase';
+import { retryAuthOperation } from '../utils/auth-retry';
 
 /**
  * @name useSignInWithOtp
@@ -13,26 +14,29 @@ export function useSignInWithOtp() {
   const mutationKey = ['auth', 'sign-in-with-otp'];
 
   const mutationFn = async (credentials: SignInWithPasswordlessCredentials) => {
-    const result = await client.auth.signInWithOtp(credentials);
+    return retryAuthOperation(async () => {
+      const result = await client.auth.signInWithOtp(credentials);
 
-    if (result.error) {
-      if (shouldIgnoreError(result.error.message)) {
-        console.warn(
-          `Ignoring error during development: ${result.error.message}`,
-        );
+      if (result.error) {
+        if (shouldIgnoreError(result.error.message)) {
+          console.warn(
+            `Ignoring error during development: ${result.error.message}`,
+          );
 
-        return {} as never;
+          return {} as never;
+        }
+
+        throw new Error(result.error.message);
       }
 
-      throw result.error.message;
-    }
-
-    return result.data;
+      return result.data;
+    }, 3, 1000, 'OTP sign in');
   };
 
   return useMutation({
     mutationFn,
     mutationKey,
+    retry: false, // We handle retries manually
   });
 }
 

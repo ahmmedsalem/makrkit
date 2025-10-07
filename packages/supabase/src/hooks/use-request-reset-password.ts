@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { useSupabase } from './use-supabase';
+import { retryAuthOperation } from '../utils/auth-retry';
 
 interface RequestPasswordResetMutationParams {
   email: string;
@@ -20,23 +21,26 @@ export function useRequestResetPassword() {
   const mutationKey = ['auth', 'reset-password'];
 
   const mutationFn = async (params: RequestPasswordResetMutationParams) => {
-    const { error, data } = await client.auth.resetPasswordForEmail(
-      params.email,
-      {
-        redirectTo: params.redirectTo,
-        captchaToken: params.captchaToken,
-      },
-    );
+    return retryAuthOperation(async () => {
+      const { error, data } = await client.auth.resetPasswordForEmail(
+        params.email,
+        {
+          redirectTo: params.redirectTo,
+          captchaToken: params.captchaToken,
+        },
+      );
 
-    if (error) {
-      throw error;
-    }
+      if (error) {
+        throw error;
+      }
 
-    return data;
+      return data;
+    }, 3, 1000, 'Password reset');
   };
 
   return useMutation({
     mutationFn,
     mutationKey,
+    retry: false, // We handle retries manually
   });
 }

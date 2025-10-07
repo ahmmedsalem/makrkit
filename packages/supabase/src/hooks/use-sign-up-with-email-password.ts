@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { useSupabase } from './use-supabase';
+import { retryAuthOperation } from '../utils/auth-retry';
 
 interface Credentials {
   email: string;
@@ -21,34 +22,37 @@ export function useSignUpWithEmailAndPassword() {
   const mutationKey = ['auth', 'sign-up-with-email-password'];
 
   const mutationFn = async (params: Credentials) => {
-    const { emailRedirectTo, captchaToken, options, ...credentials } = params;
+    return retryAuthOperation(async () => {
+      const { emailRedirectTo, captchaToken, options, ...credentials } = params;
 
-    const response = await client.auth.signUp({
-      ...credentials,
-      options: {
-        emailRedirectTo,
-        captchaToken,
-        ...(options?.data && { data: options.data }),
-      },
-    });
+      const response = await client.auth.signUp({
+        ...credentials,
+        options: {
+          emailRedirectTo,
+          captchaToken,
+          ...(options?.data && { data: options.data }),
+        },
+      });
 
-    if (response.error) {
-      throw response.error.message;
-    }
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
 
-    const user = response.data?.user;
-    const identities = user?.identities ?? [];
+      const user = response.data?.user;
+      const identities = user?.identities ?? [];
 
-    // if the user has no identities, it means that the email is taken
-    if (identities.length === 0) {
-      throw new Error('User already registered');
-    }
+      // if the user has no identities, it means that the email is taken
+      if (identities.length === 0) {
+        throw new Error('User already registered');
+      }
 
-    return response.data;
+      return response.data;
+    }, 3, 1000, 'Sign up');
   };
 
   return useMutation({
     mutationKey,
     mutationFn,
+    retry: false, // We handle retries manually
   });
 }
