@@ -14,7 +14,7 @@ import { AppLogo } from '~/components/app-logo';
 import Logo from '~/components/icons/Logo';
 import { navigationConfig } from '~/config/navigation.config';
 import { withI18n } from '~/lib/i18n/with-i18n';
-import { requireUserInServerComponent } from '~/lib/server/require-user-in-server-component';
+import { getUserOptional } from '~/lib/server/get-user-optional';
 
 // home imports
 import { HomeMenuNavigation } from './_components/home-menu-navigation';
@@ -35,14 +35,16 @@ export default withI18n(HomeLayout);
 
 async function SidebarLayout({ children }: React.PropsWithChildren) {
   const sidebarMinimized = navigationConfig.sidebarCollapsed;
-  const [user] = await Promise.all([requireUserInServerComponent()]);
+  const user = await getUserOptional();
 
   return (
     <SidebarProvider defaultOpen={sidebarMinimized}>
       <Page style={'sidebar'}>
-        <PageNavigation>
-          <HomeSidebar user={user} />
-        </PageNavigation>
+        {user && (
+          <PageNavigation>
+            <HomeSidebar user={user} />
+          </PageNavigation>
+        )}
 
         <PageMobileNavigation className={'flex items-center justify-between'}>
           <MobileNavigation />
