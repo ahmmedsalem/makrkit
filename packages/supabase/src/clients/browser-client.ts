@@ -19,7 +19,7 @@ export function getSupabaseBrowserClient<GenericSchema = Database>() {
     auth: {
       // Improve auth reliability
       persistSession: true,
-      storageKey: 'dragos-capital-auth-token',
+      // Use default storage key for compatibility with server-side
       flowType: 'pkce', // Use PKCE flow for better security
       detectSessionInUrl: true,
       autoRefreshToken: true,

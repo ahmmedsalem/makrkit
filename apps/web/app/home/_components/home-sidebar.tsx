@@ -29,7 +29,7 @@ export function HomeSidebar(props: {
       <SidebarHeader className={'h-16 justify-center'}>
         <div className={'flex items-center justify-center'}>
           <div>
-            <AppLogo collapsed={state == 'collapsed'} showDashboardLabel={true} />
+            <AppLogo collapsed={state == 'collapsed'} showDashboardLabel={false} />
           </div>
         </div>
       </SidebarHeader>

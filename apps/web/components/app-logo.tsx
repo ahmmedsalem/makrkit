@@ -6,20 +6,36 @@ import { useTheme } from 'next-themes';
 
 import { cn } from '@kit/ui/utils';
 import { Trans } from '@kit/ui/trans';
-import { useTranslation } from 'react-i18next';
 
 import appConfig from '~/config/app.config';
 
 function LogoImage({
   className,
   width = 180,
+  collapsed = false,
 }: {
   className?: string;
   width?: number;
+  collapsed?: boolean;
 }) {
   const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
-  
+
+  // When collapsed, show only the icon
+  if (collapsed) {
+    return (
+      <Image
+        src={isDarkMode ? '/images/logo/icon-white.png' : '/images/logo/icon-dark.png'}
+        alt={appConfig.name}
+        width={40}
+        height={40}
+        className={cn('h-auto', className)}
+        priority
+      />
+    );
+  }
+
+  // When expanded, show full logo
   return (
     <Image
       src={isDarkMode ? '/images/logo-white.png' : '/images/logo-dark.png'}
@@ -46,15 +62,16 @@ export function AppLogo({
   showDashboardLabel?: boolean;
 }) {
   if (href === null) {
-    return <LogoImage className={className} />;
+    return <LogoImage className={className} collapsed={collapsed} />;
   }
 
   return (
     <Link aria-label={label ?? 'Home Page'} href={href ?? '/'}>
       <div className="flex items-center">
-        <LogoImage 
+        <LogoImage
           className={className}
-          width={collapsed ? 48 : 180}
+          width={180}
+          collapsed={collapsed}
         />
         {!collapsed && showDashboardLabel && (
           <span className="ml-3 text-sm md:text-lg font-medium dark:text-white">
